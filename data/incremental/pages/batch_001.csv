@@ -1,0 +1,19 @@
+page_id,account_id,customer_id,page_type,occurred_at,event_id,showtime_id
+page_101,N/A,cust_A,Viewed Product Page,2025-02-24T08:31:35,evt_deathly_hallows,st_evt_hamilton_27
+page_102,acc_8,, viewed_product_page ,2025-01-28T01:01:14,evt_lion_king,
+page_103,acc_16,cust_A,VIEWED_PRODUCT_PAGE,2025-01-19T03:35:14,N/A,st_inc_103
+page_104,acc_7,cust_A, viewed_product_page ,2025-02-01T22:29:39,evt_deathly_hallows,
+page_105,acc_16,,VIEWED_PRODUCT_PAGE,2025-01-10T19:37:04,evt_aladdin,
+page_106,acc_3,,viewed_showtime ,2025-01-01T08:53:10,evt_six,N/A
+page_107,acc_12,,Viewed Showtime,2025-02-24T03:59:38,,
+page_108,acc_9,cust_C,viewed_showtime ,2025-02-10T11:25:11,,N/A
+page_109,acc_8,,VIEWED_PRODUCT_PAGE,2025-02-17T06:46:42,NULL,NULL
+page_110,acc_8,cust_C,viewed_showtime ,2025-02-19T04:13:51,,st_evt_lion_king_49
+page_111,acc_16,N/A,Viewed Showtime,2025-01-10T22:33:57,evt_deathly_hallows,
+page_112,acc_17,cust_C,viewed_showtime,2025-01-28T13:53:47,N/A,st_evt_wicked_5
+page_113,NULL,N/A,viewed_showtime,2025-01-09T08:42:52,,st_evt_hamilton_31
+page_114,acc_13,, viewed_product_page ,2025-02-13T19:48:29,,
+page_115,NULL,cust_C,viewed_showtime ,2025-02-05T14:30:01,,
+page_116,acc_15,cust_B, viewed_product_page ,2025-01-11T18:32:49,evt_deathly_hallows,
+page_117,acc_3,cust_C,Viewed Product Page,2025-02-12T21:36:00,evt_wicked,
+page_118,acc_4,N/A, viewed_product_page ,2025-01-27T00:47:25,evt_wicked,st_evt_lion_king_42

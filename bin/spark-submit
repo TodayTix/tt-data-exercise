@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Shim: submit a PySpark job. Usage: bin/spark-submit <script.py> [spark-submit args...]
+# Script path is relative to pyspark/ (e.g. example_job.py).
+set -euo pipefail
+cd "$(dirname "$0")/.."
+exec docker compose run --rm pyspark spark-submit /app/"$@"

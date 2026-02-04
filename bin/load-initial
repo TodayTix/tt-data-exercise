@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Shim: load data/initial/* into raw source tables (normally run as part of init).
+set -euo pipefail
+cd "$(dirname "$0")/.."
+exec docker compose run --rm loader python scripts/load_initial_source_data.py "$@"

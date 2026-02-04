@@ -1,0 +1,71 @@
+# Source tables (raw schema). Initial data loaded by scripts/load_initial_source_data.py;
+# incremental data appended by scripts/ingest.py. Candidates model from source('raw', '<table>').
+# Identity on pages: pages have both stable account_id and unstable customer_id; identity_merges applies to customer_id only.
+version: 2
+sources:
+  - name: raw
+    schema: raw
+    description: Source tables loaded from data/initial/ and appended from data/incremental/
+    tables:
+      - name: accounts
+        description: Stable account entity (e.g. logged-in user).
+        columns:
+          - name: account_id
+            description: Primary key.
+          - name: email
+          - name: created_at
+      - name: events
+        description: Shows/productions (e.g. Wicked, Hamilton).
+        columns:
+          - name: event_id
+            description: Primary key.
+          - name: name
+          - name: slug
+      - name: showtimes
+        description: A specific occurrence of an event (performance date/time).
+        columns:
+          - name: showtime_id
+            description: Primary key.
+          - name: event_id
+          - name: start_at
+      - name: orders
+        description: Order header (account, optional showtime, totals).
+        columns:
+          - name: order_id
+            description: Primary key.
+          - name: account_id
+          - name: showtime_id
+            description: Optional FK to showtimes.
+          - name: created_at
+          - name: total_amount
+      - name: transactions
+        description: Payment/transaction records (link to orders).
+        columns:
+          - name: transaction_id
+            description: Primary key.
+          - name: order_id
+          - name: amount
+          - name: occurred_at
+      - name: pages
+        description: Browsing behavior (viewed product page, viewed showtime, etc.). Has both stable account_id and unstable customer_id; resolve customer_id via identity_merges when building marts.
+        columns:
+          - name: page_id
+            description: Primary key.
+          - name: account_id
+            description: Stable; correlates to accounts.
+          - name: customer_id
+            description: Unstable; may be merged at any time (e.g. Segment Unify). Resolve via identity_merges when building marts.
+          - name: page_type
+          - name: occurred_at
+          - name: event_id
+            description: Optional context (e.g. viewed product).
+          - name: showtime_id
+            description: Optional context (e.g. viewed showtime).
+      - name: identity_merges
+        description: Merge log for customer_id (e.g. Segment Unify). from_customer_id was merged into to_customer_id at merged_at. Use to resolve pages.customer_id to canonical id when building marts.
+        columns:
+          - name: from_customer_id
+            description: Id that was merged away (unstable/deprecated).
+          - name: to_customer_id
+            description: Canonical id that absorbed the merge.
+          - name: merged_at

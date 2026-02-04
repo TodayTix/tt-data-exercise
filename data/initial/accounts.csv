@@ -1,0 +1,21 @@
+account_id,email,created_at
+acc_1, user1@example.com ,2024-12-23T10:20:10
+acc_2,user2@example.com,2024-12-14T22:15:15
+acc_3,user3@example.com,2025-01-16T03:55:07
+acc_4,user4@example.com,2025-01-13T01:37:08
+acc_5,user5@example.com,2024-12-03T12:42:21
+acc_6,user6@example.com,2025-01-11T19:13:59
+acc_7,user7@example.com,2025-01-16T07:38:25
+acc_8,user8@example.com,2024-12-09T07:34:23
+acc_9,user9@example.com,2024-12-11T16:29:48
+acc_10,user10@example.com,2024-12-03T22:21:44
+acc_11,user11@example.com,2025-01-19T06:22:14
+acc_12,user12@example.com,2025-01-09T04:53:05
+acc_13,user13@example.com,2024-12-22T03:36:32
+acc_14,user14@example.com,2025-01-19T18:30:26
+acc_15,user15@example.com,2025-01-05T22:05:23
+acc_16, user16@example.com ,2024-12-15T20:02:57
+acc_17,user17@example.com,2024-12-29T23:00:58
+acc_18,user18@example.com,2025-01-07T09:34:14
+acc_19, user19@example.com ,2024-12-30T05:00:47
+acc_20,user20@example.com,2025-01-12T15:15:49

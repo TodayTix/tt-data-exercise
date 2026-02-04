@@ -1,0 +1,4 @@
+from_customer_id,to_customer_id,merged_at
+cust_B,cust_A,2025-01-15T12:00:00
+cust_D,cust_C,2025-02-01T10:00:00
+cust_F,cust_E,2025-02-10T09:00:00

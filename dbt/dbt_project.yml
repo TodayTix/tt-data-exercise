@@ -1,0 +1,25 @@
+name: tt_data_exercise
+config-version: 2
+version: "1.0.0"
+profile: warehouse
+
+# Official dbt project paths (https://docs.getdbt.com/reference/dbt_project.yml)
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+docs-paths: ["docs"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+  - "logs"
+
+require-dbt-version: [">=1.0.0", "<3.0.0"]
+
+models:
+  tt_data_exercise:
+    +materialized: view

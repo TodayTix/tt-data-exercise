@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Shim: run ingest script (append data/incremental/* to source tables). Usage: bin/ingest [batch]
+set -euo pipefail
+cd "$(dirname "$0")/.."
+exec docker compose run --rm loader python scripts/ingest.py "$@"

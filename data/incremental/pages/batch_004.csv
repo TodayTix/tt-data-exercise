@@ -1,0 +1,19 @@
+page_id,account_id,customer_id,page_type,occurred_at,event_id,showtime_id
+page_155,acc_5,,Viewed Product Page,2025-02-02T02:19:41,,
+page_156,acc_10,,Viewed Product Page,2025-02-13T08:59:54,N/A,
+page_157,NULL,NULL,Viewed Showtime,2025-02-04T10:45:00,,
+page_158,acc_14,,viewed_showtime ,2025-01-28T07:39:08,evt_aladdin,NULL
+page_159,N/A,cust_B,Viewed Showtime,2025-02-11T07:58:46,evt_book_of_mormon,
+page_160,N/A,,Viewed Product Page,2025-02-26T12:14:39,NULL,
+page_161,acc_3,cust_A,viewed_product_page,2025-01-15T04:18:56,evt_aladdin,st_evt_hamilton_23
+page_162,acc_5,cust_B,viewed_showtime,2025-01-30T23:58:27,evt_lion_king,NULL
+page_163,acc_4,cust_B,VIEWED_PRODUCT_PAGE,2025-01-31T09:12:18,,
+page_164,acc_6,cust_A,viewed_showtime,2025-02-09T02:22:32,evt_wicked,st_evt_wicked_6
+page_165,acc_13,cust_A,viewed_showtime,2025-02-16T13:56:12,,N/A
+page_166,acc_11,cust_B,viewed_product_page,2025-01-30T02:50:27,evt_deathly_hallows,st_inc_101
+page_167,NULL,,VIEWED_PRODUCT_PAGE,2025-01-19T23:36:10,evt_hamilton,NULL
+page_168,acc_8,, viewed_product_page ,2025-02-27T20:55:10,,
+page_169,NULL,,VIEWED_PRODUCT_PAGE,2025-02-06T21:13:51,evt_lion_king,st_evt_lion_king_40
+page_170,acc_8,,Viewed Product Page,2025-02-11T06:37:12,N/A,
+page_171,acc_12,,viewed_showtime,2025-01-06T13:02:35,NULL,st_evt_wicked_17
+page_172,NULL,, viewed_product_page ,2025-02-10T15:24:36,evt_lion_king,N/A

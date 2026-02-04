@@ -1,0 +1,13 @@
+order_id,account_id,showtime_id,created_at,total_amount
+ord_90,acc_16,st_evt_lion_king_42,2025-02-24T06:40:08,81.84
+ord_91,acc_15,st_evt_hamilton_35,2025-02-25T08:00:59,161.53
+ord_92,acc_1,st_evt_hamilton_34,2025-02-07T21:55:38,$267.05
+ord_93,acc_10,st_evt_hamilton_21,2025-01-24T12:20:23,215.68
+ord_94,acc_10,st_evt_wicked_16,2025-02-07T01:05:10,333.97
+ord_95,acc_8,st_evt_hamilton_29,2025-02-25T12:38:45,209.11
+ord_96,acc_20,st_evt_lion_king_48,2025-01-25T02:51:25,228.29
+ord_97,acc_18,st_evt_hamilton_28,2025-02-14T04:30:30,263.69
+ord_98,acc_3,st_inc_107,2025-01-31T15:13:01,177.68
+ord_99,acc_4,st_evt_wicked_8,2025-02-18T01:39:12,323.78
+ord_100,acc_6,st_evt_lion_king_42,2025-02-19T13:26:40,199.30
+ord_101,acc_19,st_inc_112,2025-01-06T06:35:26,217.80

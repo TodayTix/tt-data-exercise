@@ -1,0 +1,55 @@
+services:
+  warehouse:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: warehouse
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  dbt:
+    image: ghcr.io/dbt-labs/dbt-postgres:1.9.latest
+    platform: linux/amd64
+    working_dir: /usr/app
+    volumes:
+      - ./dbt:/usr/app
+      - ./docker/dbt/profiles.yml:/root/.dbt/profiles.yml
+    command: sleep infinity
+    depends_on:
+      warehouse:
+        condition: service_healthy
+
+  loader:
+    build:
+      context: ./docker/loader
+      dockerfile: Dockerfile
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      PGHOST: warehouse
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: warehouse
+    command: sleep infinity
+    depends_on:
+      warehouse:
+        condition: service_healthy
+
+  pyspark:
+    build:
+      context: ./docker/pyspark
+      dockerfile: Dockerfile
+    volumes:
+      - ./pyspark:/app
+    command: sleep infinity
+    depends_on:
+      warehouse:
+        condition: service_healthy

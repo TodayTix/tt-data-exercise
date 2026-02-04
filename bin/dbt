@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Shim: run dbt in the dbt container. Usage: bin/dbt run | seed | test | build | ...
+set -euo pipefail
+cd "$(dirname "$0")/.."
+exec docker compose run --rm dbt "$@"

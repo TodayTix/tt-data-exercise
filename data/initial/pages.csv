@@ -1,0 +1,101 @@
+page_id,account_id,customer_id,page_type,occurred_at,event_id,showtime_id
+page_1,acc_19,cust_B,viewed_showtime ,2025-01-22T09:30:07,,
+page_2,NULL,N/A,VIEWED_PRODUCT_PAGE,2025-02-03T09:30:32,evt_six,
+page_3,acc_4,cust_C,viewed_showtime,2025-02-16T17:17:41,evt_wicked,
+page_4,acc_17,cust_B,viewed_showtime ,2025-01-29T10:21:38,evt_deathly_hallows,st_evt_wicked_12
+page_5,acc_9,,viewed_showtime ,2025-01-29T01:01:42,,N/A
+page_6,acc_3,cust_B,viewed_showtime,2025-02-05T09:34:54,evt_deathly_hallows,
+page_7,acc_9,,Viewed Showtime,2025-02-21T01:06:33,evt_hamilton,
+page_8,acc_8,, viewed_product_page ,2025-01-26T23:51:32,NULL,st_evt_lion_king_43
+page_9,acc_16,cust_C,viewed_showtime,2025-01-20T04:27:41,evt_lion_king,st_evt_wicked_8
+page_10,acc_6,, viewed_product_page ,2025-01-17T00:53:14,,
+page_11,acc_10,cust_A,Viewed Showtime,2025-01-31T23:30:57,N/A,
+page_12,NULL,N/A,viewed_showtime,2025-01-17T11:48:01,evt_wicked,NULL
+page_13,N/A,cust_C,Viewed Showtime,2025-01-04T02:37:25,,N/A
+page_14,NULL,,Viewed Product Page,2025-02-14T23:45:55,,
+page_15,acc_20,,viewed_product_page,2025-02-24T23:02:44,N/A,N/A
+page_16,N/A,cust_B, viewed_product_page ,2025-02-09T23:36:16,evt_lion_king,
+page_17,acc_8,,Viewed Showtime,2025-02-04T04:59:13,evt_wicked,
+page_18,acc_5,N/A,viewed_showtime ,2025-01-18T20:11:44,evt_lion_king,
+page_19,acc_13,, viewed_product_page ,2025-01-26T09:21:37,,
+page_20,N/A,,viewed_showtime,2025-02-04T01:16:30,,
+page_21,acc_15,cust_C, viewed_product_page ,2025-02-06T19:37:13,evt_lion_king,st_evt_wicked_7
+page_22,acc_11,cust_C, viewed_product_page ,2025-02-17T04:29:02,evt_lion_king,N/A
+page_23,acc_13,,viewed_product_page,2025-02-08T03:27:47,evt_hamilton,
+page_24,acc_15,cust_C,Viewed Product Page,2025-02-23T19:19:13,,
+page_25,N/A,cust_B,viewed_product_page,2025-01-14T00:46:59,evt_wicked,st_evt_lion_king_46
+page_26,acc_9,cust_B,Viewed Product Page,2025-01-27T11:50:48,N/A,
+page_27,acc_3,, viewed_product_page ,2025-01-20T17:06:22,evt_wicked,NULL
+page_28,acc_19,cust_A, viewed_product_page ,2025-02-01T05:42:14,evt_aladdin,
+page_29,acc_8,cust_B,viewed_product_page,2025-01-19T10:54:05,,
+page_30,acc_5,cust_C,viewed_showtime,2025-01-20T06:08:11,NULL,NULL
+page_31,N/A,,Viewed Product Page,2025-01-05T08:09:39,evt_aladdin,
+page_32,acc_18,cust_C,viewed_showtime ,2025-01-29T07:13:22,,
+page_33,acc_3,cust_C,Viewed Showtime,2025-02-20T14:37:49,,st_evt_wicked_4
+page_34,acc_12,cust_B,viewed_showtime,2025-02-09T13:03:58,N/A,NULL
+page_35,acc_8,,Viewed Product Page,2025-01-27T17:55:14,NULL,
+page_36,acc_10,cust_B,VIEWED_PRODUCT_PAGE,2025-02-27T06:48:40,NULL,
+page_37,acc_13,cust_B,viewed_showtime,2025-01-21T19:40:16,evt_deathly_hallows,st_evt_lion_king_37
+page_38,acc_2,,viewed_showtime ,2025-02-22T10:35:02,N/A,st_evt_lion_king_41
+page_39,NULL,,Viewed Showtime,2025-02-09T11:45:01,N/A,
+page_40,acc_15,NULL,Viewed Showtime,2025-01-08T14:55:30,evt_book_of_mormon,N/A
+page_41,acc_12,,viewed_showtime ,2025-01-10T13:02:44,,st_evt_hamilton_22
+page_42,acc_15,cust_A,viewed_showtime ,2025-02-09T05:26:33,evt_deathly_hallows,st_evt_hamilton_26
+page_43,acc_4,,Viewed Showtime,2025-01-16T04:55:43,,
+page_44,acc_20,,viewed_showtime,2025-01-13T20:08:35,NULL,st_evt_hamilton_27
+page_45,N/A,cust_B,viewed_product_page,2025-01-06T15:17:28,evt_book_of_mormon,
+page_46,acc_18,,Viewed Product Page,2025-02-21T08:29:45,,
+page_47,acc_12,cust_A,viewed_showtime ,2025-01-22T00:51:32,evt_six,st_evt_wicked_13
+page_48,acc_15,N/A,Viewed Showtime,2025-02-07T02:10:26,evt_lion_king,N/A
+page_49,acc_7,,Viewed Product Page,2025-02-04T00:14:42,evt_deathly_hallows,st_evt_wicked_10
+page_50,acc_18,cust_C,viewed_showtime ,2025-01-02T11:53:09,N/A,st_evt_wicked_17
+page_51,acc_14,, viewed_product_page ,2025-01-26T23:59:56,evt_book_of_mormon,
+page_52,acc_17,,viewed_product_page,2025-01-04T12:40:08,evt_six,
+page_53,N/A,cust_A,VIEWED_PRODUCT_PAGE,2025-02-06T05:02:59,,
+page_54,acc_17,cust_C,viewed_product_page,2025-02-19T11:05:14,,st_evt_hamilton_29
+page_55,acc_14,cust_B,Viewed Showtime,2025-01-06T12:21:34,,st_evt_hamilton_31
+page_56,N/A,N/A,Viewed Showtime,2025-02-12T20:24:14,evt_aladdin,
+page_57,acc_14,,viewed_showtime ,2025-01-25T12:43:41,evt_lion_king,st_evt_lion_king_37
+page_58,acc_5,cust_A,VIEWED_PRODUCT_PAGE,2025-02-19T00:45:35,,
+page_59,acc_20,,viewed_product_page,2025-02-05T07:43:15,,NULL
+page_60,acc_10,cust_A,viewed_showtime ,2025-01-09T07:24:21,evt_six,st_evt_lion_king_48
+page_61,acc_13,cust_B,VIEWED_PRODUCT_PAGE,2025-02-11T20:27:41,evt_wicked,st_evt_lion_king_49
+page_62,acc_3,, viewed_product_page ,2025-02-05T05:02:59,evt_aladdin,NULL
+page_63,acc_19,,viewed_product_page,2025-01-13T18:57:41,evt_hamilton,st_evt_wicked_9
+page_64,acc_10,cust_C, viewed_product_page ,2025-01-11T04:34:01,,
+page_65,acc_3,, viewed_product_page ,2025-01-02T02:05:17,,
+page_66,acc_14,cust_B,Viewed Product Page,2025-02-16T11:26:25,,st_evt_wicked_7
+page_67,acc_13,cust_B,Viewed Showtime,2025-01-20T16:36:08,evt_aladdin,
+page_68,NULL,,Viewed Showtime,2025-02-17T06:31:53,N/A,N/A
+page_69,acc_3,, viewed_product_page ,2025-01-27T21:49:21,evt_six,
+page_70,acc_20,,VIEWED_PRODUCT_PAGE,2025-01-09T18:07:57,NULL,
+page_71,acc_12,cust_B,viewed_product_page,2025-01-04T07:11:27,evt_deathly_hallows,st_evt_lion_king_39
+page_72,acc_15,,Viewed Showtime,2025-02-21T23:03:37,,st_evt_hamilton_31
+page_73,acc_2,,viewed_showtime ,2025-01-20T22:03:55,evt_hamilton,
+page_74,acc_17,cust_B, viewed_product_page ,2025-01-24T17:00:25,evt_deathly_hallows,st_evt_hamilton_22
+page_75,acc_13,,Viewed Showtime,2025-02-25T22:27:31,evt_wicked,st_evt_hamilton_23
+page_76,acc_13,,viewed_product_page,2025-01-18T22:56:16,,
+page_77,acc_17,, viewed_product_page ,2025-01-30T11:48:57,NULL,N/A
+page_78,acc_16,N/A,Viewed Product Page,2025-01-05T11:24:49,evt_deathly_hallows,
+page_79,acc_11,,viewed_showtime,2025-01-22T20:23:38,,st_evt_hamilton_29
+page_80,NULL,cust_B,viewed_showtime,2025-01-17T12:37:10,evt_aladdin,NULL
+page_81,acc_7,, viewed_product_page ,2025-01-27T18:39:30,NULL,
+page_82,N/A,cust_B,viewed_product_page,2025-02-07T04:31:16,evt_wicked,
+page_83,N/A,cust_C,Viewed Product Page,2025-02-18T04:49:01,N/A,
+page_84,acc_14,,VIEWED_PRODUCT_PAGE,2025-01-14T16:12:11,evt_wicked,st_evt_lion_king_46
+page_85,acc_5,NULL,viewed_showtime ,2025-01-28T09:39:26,,
+page_86,acc_1,,viewed_showtime,2025-02-24T12:47:40,evt_deathly_hallows,NULL
+page_87,N/A,, viewed_product_page ,2025-01-04T15:25:39,evt_aladdin,
+page_88,acc_10,,Viewed Product Page,2025-02-03T02:21:50,evt_lion_king,
+page_89,acc_17,cust_B,viewed_product_page,2025-02-06T20:51:13,evt_wicked,st_evt_wicked_16
+page_90,acc_4,,VIEWED_PRODUCT_PAGE,2025-01-08T17:42:22,evt_six,
+page_91,acc_6,cust_B,viewed_product_page,2025-01-18T00:28:19,N/A,st_evt_hamilton_20
+page_92,acc_18,cust_C,Viewed Product Page,2025-01-17T14:15:58,evt_six,st_evt_hamilton_24
+page_93,acc_13,, viewed_product_page ,2025-01-20T15:56:20,evt_deathly_hallows,
+page_94,acc_3,,Viewed Product Page,2025-02-01T15:18:01,evt_six,NULL
+page_95,acc_14,NULL,VIEWED_PRODUCT_PAGE,2025-01-26T22:24:16,,
+page_96,acc_2,, viewed_product_page ,2025-01-22T01:43:44,,st_evt_lion_king_39
+page_97,acc_15,N/A,Viewed Product Page,2025-02-15T03:41:36,evt_aladdin,N/A
+page_98,acc_12,,viewed_showtime,2025-01-08T23:40:17,evt_lion_king,N/A
+page_99,N/A,cust_C,viewed_product_page,2025-01-16T04:23:35,NULL,st_evt_hamilton_32
+page_100,N/A,cust_C, viewed_product_page ,2025-02-27T20:11:21,,

@@ -1,0 +1,19 @@
+page_id,account_id,customer_id,page_type,occurred_at,event_id,showtime_id
+page_137,acc_6,cust_A,Viewed Product Page,2025-01-19T05:53:43,evt_lion_king,
+page_138,NULL,, viewed_product_page ,2025-01-24T17:30:54,,st_evt_wicked_4
+page_139,acc_8,cust_C,VIEWED_PRODUCT_PAGE,2025-01-10T18:08:48,,
+page_140,N/A,,VIEWED_PRODUCT_PAGE,2025-02-01T10:31:27,,st_inc_104
+page_141,acc_8,, viewed_product_page ,2025-01-16T05:50:19,evt_deathly_hallows,
+page_142,acc_19,,viewed_showtime,2025-02-06T16:49:00,N/A,
+page_143,acc_19,cust_C,Viewed Product Page,2025-01-19T18:31:32,evt_lion_king,
+page_144,acc_4,NULL,viewed_product_page,2025-02-27T13:32:26,evt_deathly_hallows,N/A
+page_145,acc_8,, viewed_product_page ,2025-01-09T05:54:10,,st_evt_wicked_12
+page_146,acc_9,, viewed_product_page ,2025-02-25T02:45:13,evt_deathly_hallows,st_inc_108
+page_147,acc_12,, viewed_product_page ,2025-01-13T15:13:09,evt_lion_king,st_evt_wicked_17
+page_148,acc_16,,viewed_showtime ,2025-01-03T19:23:08,NULL,N/A
+page_149,acc_1,cust_C,Viewed Product Page,2025-02-21T03:56:58,,st_evt_lion_king_47
+page_150,acc_12,,viewed_product_page,2025-01-23T23:42:26,,st_evt_wicked_13
+page_151,NULL,,Viewed Product Page,2025-01-31T03:03:59,evt_lion_king,
+page_152,acc_5,cust_A,Viewed Showtime,2025-02-16T17:53:30,NULL,st_evt_wicked_18
+page_153,acc_5,,viewed_product_page,2025-02-05T09:33:51,NULL,
+page_154,NULL,cust_A,viewed_product_page,2025-02-22T00:03:26,N/A,st_inc_104

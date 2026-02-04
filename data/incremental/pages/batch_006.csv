@@ -1,0 +1,13 @@
+page_id,account_id,customer_id,page_type,occurred_at,event_id,showtime_id
+page_185,acc_6,cust_A,viewed_showtime,2025-01-13T16:34:55,evt_aladdin,N/A
+page_186,acc_6,,VIEWED_PRODUCT_PAGE,2025-01-04T10:54:06,,
+page_187,acc_3,, viewed_product_page ,2025-02-03T23:44:06,evt_hamilton,
+page_188,acc_16,cust_C,Viewed Showtime,2025-02-21T14:19:24,evt_six,st_evt_lion_king_40
+page_189,acc_10,,viewed_product_page,2025-02-25T00:42:46,evt_deathly_hallows,st_evt_lion_king_41
+page_190,acc_20,, viewed_product_page ,2025-01-09T03:46:32,evt_lion_king,N/A
+page_191,acc_11,cust_A,Viewed Showtime,2025-01-04T22:22:13,N/A,st_inc_106
+page_192,acc_6,cust_B,VIEWED_PRODUCT_PAGE,2025-02-01T16:03:55,NULL,
+page_193,acc_8,N/A,viewed_showtime ,2025-02-19T01:18:04,NULL,N/A
+page_194,N/A,cust_A,viewed_showtime,2025-02-24T15:01:59,evt_aladdin,
+page_195,acc_6,cust_A,viewed_product_page,2025-01-20T04:53:01,evt_aladdin,
+page_196,acc_10,cust_B,viewed_showtime,2025-02-01T21:07:49,evt_wicked,st_inc_111
