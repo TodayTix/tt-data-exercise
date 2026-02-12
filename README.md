@@ -2,13 +2,35 @@
 
 A data exercise with a Postgres warehouse and dbt. Source data lives in Postgres (schema `raw`); initial data is loaded from `data/initial/`, and incremental batches are appended via `bin/ingest`. You will build dbt models in **staging**, **intermediate**, and **mart** layers from the provided sources.
 
-**Prerequisites:** Docker.
+## Pre-requisites
+
+You must have **Docker** installed and be able to run **Docker Compose**. Run these commands to verify everything works:
+
+```bash
+docker --version
+docker compose version
+docker run --rm hello-world
+docker compose ls
+```
 
 ---
 
 ## Candidate instructions and goals
 
-Your task is to design and implement the dbt modeling layers so that the data is clean, well-structured, and ready for analysis.
+### What to do
+
+1. **Review the raw sources**
+    - Identify relationships, keys, grains, and obvious data quality issues.
+2. **Build staging models**
+    - Clean and standardize types, naming, and formats.
+    - Deduplicate and handle nulls/outliers where appropriate.
+3. **Add intermediate models (if needed)**
+    - Centralize reusable joins/business rules and establish consistent grains.
+4. **Publish analysis-ready marts and demonstrate readiness**
+    - Create clear, business-friendly final tables (e.g., facts/dimensions).
+    - Make grains, keys, and definitions explicit.
+5. **Test and document**
+    - Add high-signal dbt tests and document key assumptions.
 
 ### Data model head start
 
@@ -24,18 +46,16 @@ Your task is to design and implement the dbt modeling layers so that the data is
 
 Raw data is intentionally varied (whitespace, casing, amount formats, sentinel values). See [docs/DATA_LIFECYCLE.md](docs/DATA_LIFECYCLE.md) for normalization expectations.
 
-### What to build
+### dbt Modeling Layers
 
-1. **Staging** (`dbt/models/staging/`)  
+1. **Staging** (`dbt/models/staging/`)
    One or more models per raw source. Clean and normalize: trim text, standardize enums (e.g. page_type), cast amounts (strip `$` and commas) and timestamps, and treat sentinel values (`N/A`, `NULL`, empty) as SQL NULL. Staging output should be safe for downstream use.
 
-2. **Intermediate** (`dbt/models/intermediate/`)  
+2. **Intermediate** (`dbt/models/intermediate/`)
    Models that sit between staging and marts: e.g. resolve pages to a canonical customer using `identity_merges`, or join orders to showtimes and events for analysis.
 
-3. **Mart** (`dbt/models/mart/`)  
+3. **Mart** (`dbt/models/mart/`)
    Business-ready models that support queries such as **weekly aggregate sales** (e.g. sales by week, optionally by event or show). Use appropriate grain (e.g. one row per order or per transaction) and consider incremental materialization where it makes sense.
-
-You choose the exact staging, intermediate, and mart models and their grain; the structure above and `sources.yml` are your starting point.
 
 ---
 
@@ -63,7 +83,20 @@ Reset to that state anytime:
 
 See [docs/DATA_LIFECYCLE.md](docs/DATA_LIFECYCLE.md) for init, reset, incremental ingestion, and raw data quality notes.
 
-## Commands (bin shims)
+## Project layout
+
+| Path | Purpose |
+|------|---------|
+| `dbt/models/` | dbt models. `sources.yml` defines raw sources; `staging/`, `intermediate/`, `mart/` are where you add models. |
+| `dbt/seeds/` | Mapping seeds (e.g. event_type_mapping.csv); use `ref()` in models. |
+| `pyspark/` | PySpark scripts; run with `bin/spark-submit <script>.py`. |
+| `data/initial/` | CSVs loaded into source tables at init. |
+| `data/incremental/` | CSVs appended by `bin/ingest` (e.g. `events/batch_001.csv`). |
+| `scripts/` | Init, reset, load_initial_source_data.py, ingest.py. |
+| `bin/` | Shims for dbt, ingest, load-initial, spark-submit. |
+| `docs/` | Data lifecycle and normalization expectations. |
+
+## Useful Commands
 
 Run these from the repo root. They wrap `docker compose run --rm ...`.
 
@@ -77,19 +110,6 @@ Run these from the repo root. They wrap `docker compose run --rm ...`.
 | `bin/ingest events/batch_001` | Ingest a single batch |
 | `bin/load-initial` | Load `data/initial/*` into raw (used by init) |
 | `bin/spark-submit example_job.py` | Submit a PySpark job |
-
-## Project layout
-
-| Path | Purpose |
-|------|---------|
-| `dbt/models/` | dbt models. `sources.yml` defines raw sources; `staging/`, `intermediate/`, `mart/` are where you add models. |
-| `dbt/seeds/` | Mapping seeds (e.g. event_type_mapping.csv); use `ref()` in models. |
-| `pyspark/` | PySpark scripts; run with `bin/spark-submit <script>.py`. |
-| `data/initial/` | CSVs loaded into source tables at init. |
-| `data/incremental/` | CSVs appended by `bin/ingest` (e.g. `events/batch_001.csv`). |
-| `scripts/` | Init, reset, load_initial_source_data.py, ingest.py. |
-| `bin/` | Shims for dbt, ingest, load-initial, spark-submit. |
-| `docs/` | Data lifecycle and normalization expectations. |
 
 ## dbt
 
