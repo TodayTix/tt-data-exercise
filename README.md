@@ -10,7 +10,7 @@ You must have **Docker** installed and be able to run **Docker Compose**. Run th
 docker --version
 docker compose version
 docker run --rm hello-world
-docker compose up --help
+docker compose ls
 ```
 
 ---
