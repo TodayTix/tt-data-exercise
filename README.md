@@ -46,7 +46,7 @@ docker compose ls
 
 Raw data is intentionally varied (whitespace, casing, amount formats, sentinel values). See [docs/DATA_LIFECYCLE.md](docs/DATA_LIFECYCLE.md) for normalization expectations.
 
-### dbt Modelling Layers
+### dbt Modeling Layers
 
 1. **Staging** (`dbt/models/staging/`)
    One or more models per raw source. Clean and normalize: trim text, standardize enums (e.g. page_type), cast amounts (strip `$` and commas) and timestamps, and treat sentinel values (`N/A`, `NULL`, empty) as SQL NULL. Staging output should be safe for downstream use.
