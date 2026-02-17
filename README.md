@@ -17,20 +17,13 @@ docker compose ls
 
 ## Candidate instructions and goals
 
-### What to do
+### How to Approach This Exercise
 
-1. **Review the raw sources**
-    - Identify relationships, keys, grains, and obvious data quality issues.
-2. **Build staging models**
-    - Clean and standardize types, naming, and formats.
-    - Deduplicate and handle nulls/outliers where appropriate.
-3. **Add intermediate models (if needed)**
-    - Centralize reusable joins/business rules and establish consistent grains.
-4. **Publish analysis-ready marts and demonstrate readiness**
-    - Create clear, business-friendly final tables (e.g., facts/dimensions).
-    - Make grains, keys, and definitions explicit.
-5. **Test and document**
-    - Add high-signal dbt tests and document key assumptions.
+Explore the source data and use your judgment to design dbt models that make the data analysis-ready. Consider the relationships, data quality, and potential business questions supported by the warehouse. Determine where to clean, transform, join, or standardize raw data, and decide which layers (staging, intermediate, mart) are most appropriate for each transformation.
+
+Aim to build clear, well-documented, and testable outputs that illustrate your modeling choices. You are encouraged to adopt practices and structures you find suitable for delivering trustworthy, business-friendly data sets, making explicit any key definitions, grains, or assumptions in your work.
+
+Focus on pragmatic modeling and testing strategies, and use documentation to share your rationale and any noteworthy challenges encountered.
 
 ### Data model head start
 
