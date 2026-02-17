@@ -24,10 +24,7 @@ docker compose ls
 From the repo root, run:
 
 ```bash
-# Start Postgres and other services
-docker compose up -d
-
-# Load initial data and run dbt
+# This script starts the necessary services and initializes the database.
 ./scripts/init.sh
 ```
 
