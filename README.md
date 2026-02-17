@@ -115,11 +115,10 @@ See [docs/DATA_LIFECYCLE.md](docs/DATA_LIFECYCLE.md) for details on data lifecyc
 |------|---------|
 | `dbt/models/` | dbt models. `sources.yml` defines raw sources; `staging/`, `intermediate/`, `mart/` are where you add models. |
 | `dbt/seeds/` | Mapping seeds (e.g. event_type_mapping.csv); use `ref()` in models. |
-| `pyspark/` | PySpark scripts; run with `bin/spark-submit <script>.py`. |
 | `data/initial/` | CSVs loaded into source tables at init. |
 | `data/incremental/` | CSVs appended by `bin/ingest` (e.g. `events/batch_001.csv`). |
 | `scripts/` | Init, reset, load_initial_source_data.py, ingest.py. |
-| `bin/` | Shims for dbt, ingest, load-initial, spark-submit. |
+| `bin/` | Shims for dbt, ingest, and load-initial. |
 | `docs/` | Data lifecycle and normalization expectations. |
 
 ## Command Reference
@@ -143,12 +142,6 @@ Run these from the repo root. They wrap `docker compose run --rm ...`.
 | `bin/ingest events/batch_001` | Ingest a single batch |
 | `bin/load-initial` | Load `data/initial/*` into raw (used by init) |
 
-### PySpark
-
-| Command | Purpose |
-|--------|---------|
-| `bin/spark-submit example_job.py` | Submit a PySpark job |
-
 ---
 
 ## Additional Reference
@@ -160,13 +153,3 @@ Run these from the repo root. They wrap `docker compose run --rm ...`.
 - **Seeds** in `dbt/seeds/` are for mappings only; use `ref()` to reference them.
 
 No local dbt install required; use `bin/dbt run`, `bin/dbt seed`, `bin/dbt test`, etc.
-
-### PySpark
-
-Scripts in `pyspark/` connect to the warehouse via JDBC. Example:
-
-```bash
-bin/spark-submit example_job.py
-```
-
-**Warehouse connection:** host `warehouse`, port 5432, database `warehouse`, user/password `postgres`/`postgres`. JDBC driver is included; no `--packages` needed. To reduce logs, set `spark.sparkContext.setLogLevel("WARN")` in your script.
