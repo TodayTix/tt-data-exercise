@@ -60,14 +60,16 @@ Focus on pragmatic modeling and testing strategies, and use documentation to sha
 
 ### dbt Modeling Layers
 
+Use these layers as a framework for organizing your transformations. The specific models you build and how you use each layer should be driven by your exploration of the data and the business questions you want to enable.
+
 1. **Staging** (`dbt/models/staging/`)
-   One or more models per raw source. Clean and normalize: trim text, standardize enums (e.g. page_type), cast amounts (strip `$` and commas) and timestamps, and treat sentinel values (`N/A`, `NULL`, empty) as SQL NULL. Staging output should be safe for downstream use.
+   Typically handles raw data cleaning and standardization. Consider what data quality issues need addressing, which fields need type casting or formatting, and how to handle sentinel values or nulls. The goal is to make raw data safe and consistent for downstream use.
 
 2. **Intermediate** (`dbt/models/intermediate/`)
-   Models that sit between staging and marts: e.g. resolve pages to a canonical customer using `identity_merges`, or join orders to showtimes and events for analysis.
+   Optional layer for reusable transformations that don't fit cleanly in staging or marts. You might use this for complex joins, identity resolution, denormalization, or establishing consistent grains across entities. Not every model needs this layer - use it where it adds clarity.
 
 3. **Mart** (`dbt/models/mart/`)
-   Business-ready models that support queries such as **weekly aggregate sales** (e.g. sales by week, optionally by event or show). Use appropriate grain (e.g. one row per order or per transaction) and consider incremental materialization where it makes sense.
+   Business-ready datasets designed to answer specific analytical questions. Consider what questions stakeholders might ask, what grain makes sense for different analyses, and how to make the data intuitive to query. These could be fact tables, aggregates, or denormalized views - whatever best serves the analysis needs you identify.
 
 ---
 
