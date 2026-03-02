@@ -1,16 +1,18 @@
 # Data coding exercise
 
+Evaluate the raw source data, identify business metrics a stakeholder would care about, and build dbt models to deliver analysis-ready datasets.
+
 ## Overview
 
-For this round, you'll complete a short data engineering exercise using a containerized Postgres warehouse and dbt. The exercise runs locally via Docker, so please make sure Docker is installed before you begin. This repository contains source data, starter dbt project structure, and scripts. Your goal is to design and build the staging, intermediate, and mart layers so the data is clean, well-structured, and ready for analysis, based on the provided sources and normalization guidelines.
+For this round, you'll complete a short data engineering exercise using a containerized Postgres warehouse and dbt. The exercise runs locally via Docker. This repository contains source data, a starter dbt project structure, and scripts.
 
-Source data lives in Postgres (schema `raw`); initial data is loaded from `data/initial/`, and incremental batches are appended via `bin/ingest`. You will build dbt models in **staging**, **intermediate**, and **mart** layers from the provided sources.
+The exercise will be completed **live with the interviewer(s)**. You'll work locally using this repo. You may use your normal tools, including AI assistants.
 
-## Before You Begin
+**This exercise is about reasoning and approach, not finishing everything.** You are not expected to model every table or build a full production-ready warehouse in the time provided. Focus on a sensible subset of the data, clear model structure, and sound assumptions and explanations.
 
-### 1. Verify Docker is installed and working
+## Getting started
 
-Run these commands to confirm your Docker setup:
+You must have **Docker** installed and be able to run **Docker Compose**. Verify with:
 
 ```bash
 docker --version
@@ -19,16 +21,14 @@ docker run --rm hello-world
 docker compose ls
 ```
 
-### 2. Start the stack and initialize the warehouse
-
-From the repo root, run:
+Start the stack and load initial data:
 
 ```bash
-# This script starts the necessary services and initializes the database.
+docker compose up -d
 ./scripts/init.sh
 ```
 
-### 3. Verify dbt works
+Verify dbt works:
 
 ```bash
 bin/dbt --version
@@ -37,42 +37,25 @@ bin/dbt run
 
 If these commands complete successfully, you're ready for the interview.
 
-## What to Expect
+To reset the warehouse to its initial state at any time:
 
-The exercise will be completed **live with the interviewer(s)**. You'll work locally using this repo. You may use your normal tools, including AI assistants.
+```bash
+./scripts/reset.sh
+```
 
-**This exercise is about reasoning and approach, not finishing everything.** You are not expected to model every table or build a full production-ready warehouse in the time provided. Focus on a sensible subset of the data, clear model structure, and sound assumptions and explanations.
+## What to build
 
----
+Explore the source data, consider the relationships and data quality issues, and build dbt models that make the data analysis-ready. The project is set up with three model layers — `staging/` for cleaning raw sources, `intermediate/` for joining and reshaping, and `mart/` for business-ready output.
 
-## Your Assignment
+A large part of this exercise is seeing how you think through the full journey from raw data to business-ready output. We're evaluating your modeling choices, how you handle data quality, what you identify as valuable business insight, and how you structure and test the result. There's no single right answer — show us your approach.
 
-### How to Approach This Exercise
+Use documentation to share your rationale, key definitions, assumptions, and any noteworthy challenges you encountered.
 
-Explore the source data and use your judgment to design dbt models that make the data analysis-ready. Consider the relationships, data quality, and potential business questions supported by the warehouse. Determine where to clean, transform, join, or standardize raw data, and decide which layers (staging, intermediate, mart) are most appropriate for each transformation.
+## Source data reference
 
-Aim to build clear, well-documented, and testable outputs that illustrate your modeling choices. You are encouraged to adopt practices and structures you find suitable for delivering trustworthy, business-friendly data sets, making explicit any key definitions, grains, or assumptions in your work.
+**`dbt/models/sources.yml`** defines the raw source tables and columns. Use it as your starting point. Sources are referenced with `{{ source('raw', 'table_name') }}`.
 
-Focus on pragmatic modeling and testing strategies, and use documentation to share your rationale and any noteworthy challenges encountered.
-
-### dbt Modeling Layers
-
-Use these layers as a framework for organizing your transformations. The specific models you build and how you use each layer should be driven by your exploration of the data and the business questions you want to enable.
-
-1. **Staging** (`dbt/models/staging/`)
-   Typically handles raw data cleaning and standardization. Consider what data quality issues need addressing, which fields need type casting or formatting, and how to handle sentinel values or nulls. The goal is to make raw data safe and consistent for downstream use.
-
-2. **Intermediate** (`dbt/models/intermediate/`)
-   Optional layer for reusable transformations that don't fit cleanly in staging or marts. You might use this for complex joins, identity resolution, denormalization, or establishing consistent grains across entities. Not every model needs this layer - use it where it adds clarity.
-
-3. **Mart** (`dbt/models/mart/`)
-   Business-ready datasets designed to answer specific analytical questions. Consider what questions stakeholders might ask, what grain makes sense for different analyses, and how to make the data intuitive to query. These could be fact tables, aggregates, or denormalized views - whatever best serves the analysis needs you identify.
-
----
-
-## Data Model Reference
-
-**`dbt/models/sources.yml`** defines the raw source tables and columns. Use it as your reference for the data model. Raw tables live in the `raw` schema and include:
+Raw tables live in the `raw` schema and include:
 
 - **accounts** – Stable account entity (account_id, email, created_at).
 - **events** – Shows/productions (e.g. Wicked, Hamilton): event_id, name, slug.
@@ -80,34 +63,17 @@ Use these layers as a framework for organizing your transformations. The specifi
 - **orders** – Order header: order_id, account_id, showtime_id, created_at, total_amount.
 - **transactions** – Payment records: transaction_id, order_id, amount, occurred_at.
 - **pages** – Browsing behavior with **stable** `account_id` and **unstable** `customer_id` (may be merged over time); optional event_id, showtime_id.
-- **identity_merges** – Merge log for customer_id (from_customer_id → to_customer_id, merged_at). Use to resolve pages to a canonical identity when building marts.
+- **identity_merges** – Merge log for customer_id (from_customer_id → to_customer_id, merged_at). Use to resolve pages to a canonical identity.
 
-**Data Quality Notes:** Raw data is intentionally varied (whitespace, casing, amount formats, sentinel values). See [docs/DATA_LIFECYCLE.md](docs/DATA_LIFECYCLE.md) for normalization expectations.
+## Raw data quality
 
----
+Raw data is intentionally varied. Expect the following issues:
 
-## Working with the Stack
-
-### Reset to initial state
-
-If you need to start fresh anytime during the exercise:
-
-```bash
-./scripts/reset.sh
-```
-
-This will reload initial source data and re-run `dbt seed` and `dbt run`.
-
-### Incremental data ingestion
-
-To append incremental batches from `data/incremental/`:
-
-```bash
-bin/ingest                      # Ingest all batches
-bin/ingest events/batch_001     # Ingest a specific batch
-```
-
-See [docs/DATA_LIFECYCLE.md](docs/DATA_LIFECYCLE.md) for details on data lifecycle, ingestion, and data quality notes.
+- **Whitespace** – leading/trailing spaces in text (e.g. event names, emails, page_type).
+- **Inconsistent casing** – e.g. `Viewed Product Page` vs `viewed_product_page` vs `VIEWED_PRODUCT_PAGE`.
+- **Amount formats** – `150.00`, `$200.50`, or `1,000.00` (with dollar sign or commas) in `orders.total_amount` and `transactions.amount`.
+- **Sentinel / null-ish values** – optional FKs may be empty string, `N/A`, or `NULL` instead of SQL NULL.
+- **Timestamp consistency** – values are stored as loaded and may need to be cast to a consistent type.
 
 ## Project layout
 
@@ -118,14 +84,11 @@ See [docs/DATA_LIFECYCLE.md](docs/DATA_LIFECYCLE.md) for details on data lifecyc
 | `data/initial/` | CSVs loaded into source tables at init. |
 | `data/incremental/` | CSVs appended by `bin/ingest` (e.g. `events/batch_001.csv`). |
 | `scripts/` | Init, reset, load_initial_source_data.py, ingest.py. |
-| `bin/` | Shims for dbt, ingest, and load-initial. |
-| `docs/` | Data lifecycle and normalization expectations. |
+| `bin/` | Shims for dbt, ingest, load-initial. |
 
-## Command Reference
+## Useful commands
 
-Run these from the repo root. They wrap `docker compose run --rm ...`.
-
-### dbt Commands
+Run these from the repo root. They wrap `docker compose run --rm ...`. No local dbt install required.
 
 | Command | Purpose |
 |--------|---------|
@@ -133,23 +96,6 @@ Run these from the repo root. They wrap `docker compose run --rm ...`.
 | `bin/dbt seed` | Load dbt seeds (mappings) |
 | `bin/dbt test` | Run dbt tests |
 | `bin/dbt build` | Run models and tests |
-
-### Data Management
-
-| Command | Purpose |
-|--------|---------|
-| `bin/ingest` | Append `data/incremental/*` into source tables |
+| `bin/ingest` | Append `data/incremental/*` into source tables; run `bin/dbt run` after to refresh models |
 | `bin/ingest events/batch_001` | Ingest a single batch |
 | `bin/load-initial` | Load `data/initial/*` into raw (used by init) |
-
----
-
-## Additional Reference
-
-### dbt
-
-- **Sources** in `dbt/models/sources.yml` point at schema `raw`. Reference them with `{{ source('raw', 'table_name') }}`.
-- **Models** go in `staging/`, `intermediate/`, and `mart/` under `dbt/models/`. Build from sources (and optionally seeds) in staging, then from staging/intermediate in later layers.
-- **Seeds** in `dbt/seeds/` are for mappings only; use `ref()` to reference them.
-
-No local dbt install required; use `bin/dbt run`, `bin/dbt seed`, `bin/dbt test`, etc.
