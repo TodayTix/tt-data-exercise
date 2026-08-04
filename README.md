@@ -1,14 +1,14 @@
 # Data platform onboarding exercise: Meridian Live (MARI portfolio company)
 
-Design and build how a newly-acquired MARI portfolio company's ticketing data enters TTG's existing, already-in-production dbt platform — without breaking what's already certified.
+Design and build how a newly-acquired MARI portfolio company's ticketing data lands in TTG's dbt platform alongside TodayTix's own.
 
 ## Overview
 
-TTG's data platform (staging → intermediate → mart) is already built and running against TodayTix's own source data. As TTG scales as part of MARI, portfolio companies with their own ticketing systems, their own schemas, and their own data quality quirks need to land in that same platform so stakeholders and AI tooling can query one unified view — not a pile of one-off tables per source.
+TTG's platform has a staging layer over TodayTix's own source data and nothing above it. As TTG scales as part of MARI, portfolio companies with their own ticketing systems, their own schemas, and their own data quality quirks need to land in that same platform so stakeholders and AI tooling can query one unified view — not a pile of one-off tables per source.
 
-For this round, you'll take on **Meridian Live**, a fictional (but realistic) MARI portfolio ticketing company, and design + build the onboarding of its data onto the existing platform. The exercise runs locally via Docker, same as the platform's real dev environment. This repository contains the existing platform (already modeled), Meridian's raw source data, and the same scripts/tooling engineers use day to day.
+For this round, you'll take on **Meridian Live**, a fictional (but realistic) MARI portfolio ticketing company, and design + build the onboarding of its data. The exercise runs locally via Docker, same as the platform's real dev environment. This repository contains the staging layer, Meridian's raw source data, and the same scripts/tooling engineers use day to day. What sits above staging — the models, the grain, the layering, the names — is yours to decide.
 
-There are two challenges in this repo. **Challenge 1** is onboarding Meridian — modeling work against messy source data. **Challenge 2** is the whitelabel page-tracking pipeline — a pipeline-design problem on code that already works. Your interviewer will tell you which one (or both) you're running.
+There are two challenges in this repo. **Challenge 1** is onboarding Meridian — modeling judgment against messy source data. **Challenge 2** is the whitelabel page-tracking sources — a pipeline-design problem. Your interviewer will tell you which one (or both) you're running.
 
 The exercise will be completed **live with the interviewer(s)**. You'll work locally using this repo. You may use your normal tools, including AI assistants.
 
@@ -16,9 +16,8 @@ The exercise will be completed **live with the interviewer(s)**. You'll work loc
 
 ## What's already built vs. what you'll build
 
-- **Already built and working:** `stg_accounts`, `stg_events`, `stg_showtimes`, `stg_orders`, `stg_transactions`, `stg_pages`, `stg_identity_merges`, the `base_*__pages` models, `int_pages_identity_resolved`, `dim_customers`, `dim_events`, `fct_transactions`. Run `bin/dbt run` right after `init.sh` and confirm these build cleanly before you touch anything — this is today's certified platform, and downstream dashboards and the AI/agent layer query `fct_transactions` and the dims directly.
-- **Challenge 1 builds:** the staging → intermediate → mart path for Meridian's raw tables, converging into the existing marts (extending `fct_transactions`/`dim_customers`/`dim_events`, adding new models, or some combination — your call, but be explicit about why) so Meridian's activity shows up alongside TodayTix's in a way stakeholders and downstream consumers can trust. Nothing in the list above needs to change for this.
-- **Challenge 2 changes:** `stg_pages` and the `base_*__pages` models. They build fine today — the problem is what it costs to keep them building. See below.
+- **Already built:** one staging model per TodayTix source table — `stg_accounts`, `stg_events`, `stg_showtimes`, `stg_orders`, `stg_transactions`, `stg_pages`, `stg_identity_merges`. They clean and rename, nothing more. Run `bin/dbt run` right after `init.sh` and confirm they build cleanly before you touch anything.
+- **Everything above staging is yours.** There is no intermediate layer and no mart layer. What the platform should expose to stakeholders and to the AI/agent layer, at what grain, under what names, is part of what's being asked — not a template to fill in.
 
 ## Getting started
 
@@ -57,39 +56,35 @@ To reset the warehouse to its initial state at any time:
 
 Meridian's raw data lands in the same `raw` schema as TTG's (see `dbt/models/sources.yml`), but it isn't a clean drop-in — that's the point. A few problems you'll likely need to reckon with, in no particular order:
 
-- **Identity across systems.** TTG resolves its own unstable `customer_id` via an `identity_merges` log. Meridian has no such log, and there's no shared key between TTG and Meridian besides a loosely-formatted email. Some real people plausibly exist in both systems. How would you approach unifying (or deliberately not unifying) identity here, and what are the failure modes of your approach?
-- **Currency.** Meridian orders are priced in GBP, EUR, and SEK, formatted inconsistently (symbols, thousands/decimal separators). `fct_transactions` today assumes USD. How do you normalize without hardcoding rates in SQL?
-- **Grain.** TTG's certified fact is one row per transaction (payment). Meridian has no transactions table — its natural grain is the order, and orders can have multiple line items (`meridian_order_items`) at different price points. Do you roll up to order grain to match, introduce something new, or something else? What breaks downstream if you get this wrong?
+- **Identity across systems.** TTG's unstable `customer_id` is resolvable through the `identity_merges` log. Meridian has no such log, and there's no shared key between TTG and Meridian besides a loosely-formatted email. Some real people plausibly exist in both systems. How would you approach unifying (or deliberately not unifying) identity here, and what are the failure modes of your approach?
+- **Currency.** Meridian orders are priced in GBP, EUR, and SEK, formatted inconsistently (symbols, thousands/decimal separators). TTG's amounts are USD. How do you normalize without hardcoding rates in SQL?
+- **Grain.** TTG's natural fact grain is one row per transaction (payment). Meridian has no transactions table — its natural grain is the order, and orders can have multiple line items (`meridian_order_items`) at different price points. Do you land both at one grain, keep them apart, or something else? What breaks for a stakeholder if you get this wrong?
 - **Time.** Meridian stores performance start times as naive local timestamps plus a UTC offset in minutes; TTG's `showtimes.start_at` is already a normalized instant. Reconcile these consistently.
-- **Order status and cancellations.** Meridian orders can be `paid`, `refunded`, `partial_refund`, or `cancelled` (casing/whitespace inconsistent). What should "revenue" mean once these exist, and does that change what belongs in a certified fact versus what a stakeholder should query separately?
+- **Order status and cancellations.** Meridian orders can be `paid`, `refunded`, `partial_refund`, or `cancelled` (casing/whitespace inconsistent). What should "revenue" mean once these exist, and does that change what belongs in the fact you expose versus what a stakeholder should query separately?
 
 You don't need to resolve every one of these perfectly. Pick a defensible position on each, implement what you can in the time available, and be ready to explain what you didn't get to and why.
 
 ## Challenge 2: whitelabel storefronts that onboard themselves
 
-TTG powers whitelabel storefronts for other MARI brands. Each brand's web tracking lands in its own schema in the same warehouse, and `stg_pages` unions those brands together with TodayTix's own `raw.pages` so everything downstream sees one stream of page loads.
+TTG powers whitelabel storefronts for other MARI brands. Each brand's web tracking lands in its own schema in the warehouse, next to `raw`. Nothing in this project reads them — `stg_pages` covers TodayTix's own pages and stops there. Page loads across TodayTix and the brands are meant to be one stream, and today they aren't.
 
-Three brands follow the tracking standard the team agreed on: the schema is named `wl_<brand>`, the page relation is called `pages`, and the columns come from a fixed vocabulary — `page_id`, `visitor_id`, `account_id`, `page_type`, `occurred_at`, `event_id`, `showtime_id`, `utm_source`, `utm_medium`, `brand_code`. Only `page_id` and `occurred_at` are guaranteed. Which of the rest a brand sends depends on the tracker version it launched with, and some brands send extra columns of their own that mean nothing to us.
+Most brands follow the tracking standard the team agreed on: the schema is named `wl_<brand>`, the page relation is called `pages`, and the columns come from a fixed vocabulary — `page_id`, `visitor_id`, `account_id`, `page_type`, `occurred_at`, `event_id`, `showtime_id`, `utm_source`, `utm_medium`, `brand_code`. Only `page_id` and `occurred_at` are guaranteed. Which of the rest a brand sends depends on the tracker version it launched with, and some brands send extra columns of their own that mean nothing to us.
 
-One source doesn't follow the standard. `partner_orpheum` was onboarded before the standard existed: unprefixed schema, a `page_views` relation, its own column names, and no page type at all — intent has to be read off the URL path. **It is out of scope.** Leave `base_partner_orpheum__pages` hand-written.
+`partner_orpheum` doesn't follow the standard at all — it was onboarded before the standard existed. Unprefixed schema, a `page_views` relation, its own column names, and no page type at all: intent is only readable off the URL path. It predates the standard and it isn't going to be brought onto it, so treat it as a separate problem from the standard-conforming brands.
 
-**The problem.** A brand launching is a data-side event: its tracker starts writing into a new schema and nobody on the data team is told. The pipeline doesn't notice. Someone has to declare a source, write a base model, and add a leg to `stg_pages` — a pull request per brand, and brands arrive faster than that queue drains. Until it merges, the brand's rows sit in the warehouse invisible to everyone downstream, and the brand's team is asking why their dashboard is empty.
+**The problem.** A brand launching is a data-side event: its tracker starts writing into a new schema and nobody on the data team is told. The obvious build — declare a source, write a model per brand — means a pull request per launch, and brands arrive faster than that queue drains. Until it merges, the brand's rows sit in the warehouse invisible to everyone downstream while the brand's team asks why their dashboard is empty.
 
-**Your task.** Change the pipeline so a new standard-conforming brand appears in `stg_pages` with no repository change at all. Mid-session your interviewer will run `bin/add-partner <brand>`, which creates a brand-new `wl_*` schema directly in the warehouse — nothing lands in this repo. You then run `bin/dbt build` against an untouched working tree, and that brand's rows should be there. A list of brand names in a macro is not a solution; it's the same pull request wearing a hat.
+**Your task.** Build the page-load path so the brands land alongside TodayTix's pages, and so that a brand launching *after* you finish shows up with no change to this repository at all. Mid-session your interviewer will run `bin/add-partner <brand>`, which creates a brand-new `wl_*` schema directly in the warehouse — nothing lands here. You then run `bin/dbt build` against an untouched working tree, and that brand's rows should be there. A list of brand names in a macro is not a solution; it's the same pull request wearing a hat.
 
 Worth having a position on, and worth saying out loud as you go:
 
 - What happens the first time a brand appears with a column set nobody anticipated, at 3am, with no one watching.
 - What you give up by taking these sources out of dbt's declared source graph, and whether you're willing to pay it.
-- How someone debugging this in six months finds out which brands are actually in the union today.
-- Which parts of the union should stay hand-written, and how a reader can tell which is which.
+- How someone debugging this in six months finds out which brands are actually in the pipeline today.
+- Which parts should stay hand-written, and how a reader can tell which is which.
 - What should happen if discovery returns nothing at all.
 
-To see what the union currently holds:
-
-```sql
-select source_key, count(*) from public.stg_pages group by 1 order by 1;
-```
+Whatever you build, be able to show rows per brand at the end of it.
 
 ## Source data reference
 
@@ -107,12 +102,12 @@ Meridian tables (new, unmodeled):
 - **meridian_order_items** – Ticket/merch line items within an order, Meridian's natural grain: order_item_id, order_id, seat_section, unit_price, quantity.
 - **meridian_web_sessions** – Browsing behavior: session_id, **cookie_id** (unstable, anonymous), customer_id (only populated once known, e.g. at checkout), event_id (optional), page_type, occurred_at. **There is no identity-resolution table for Meridian** — unlike TTG's `identity_merges`, cookie-to-customer linkage only exists where a session happens to convert.
 
-Whitelabel schemas (Challenge 2), one per brand, outside `raw`:
+Whitelabel schemas (Challenge 2) sit outside `raw`, one per brand, and none of them are declared in `sources.yml` — inspect them in the warehouse:
 
 - **wl_arcadia.pages** – Sends every column in the standard.
 - **wl_northgate.pages** – Older tracker: no `showtime_id`, no `utm_*`. Those columns don't exist on the table.
 - **wl_lumen.pages** – The standard set plus `consent_state` and `device_type`, which mean nothing to the platform.
-- **partner_orpheum.page_views** – Pre-standard, out of scope: view_id, cookie, member_ref, path, viewed_at, production_ref.
+- **partner_orpheum.page_views** – Pre-standard: view_id, cookie, member_ref, path, viewed_at, production_ref.
 - **wl_sandbox.sessions** – A brand's schema that carries no `pages` relation at all.
 
 `event_id` and `showtime_id` on whitelabel rows are TTG ids — the brands sell TTG inventory through a TTG-powered storefront.
@@ -137,11 +132,10 @@ Meridian (new, unhandled):
 
 | Path | Purpose |
 |------|---------|
-| `dbt/models/sources.yml` | Defines all sources — TTG, Meridian, and the declared whitelabel brands. |
-| `dbt/models/staging/` | TTG staging models are already built. Meridian staging models are yours to add. |
-| `dbt/models/staging/whitelabel/` | One hand-written base model per whitelabel brand, unioned by `stg_pages`. Challenge 2 territory. |
-| `dbt/models/intermediate/` | TTG has `int_pages_identity_resolved`. Meridian intermediate logic (identity, currency, grain) is yours to add. |
-| `dbt/models/mart/` | `dim_customers`, `dim_events`, `fct_transactions` already exist and are certified — extend, don't break. |
+| `dbt/models/sources.yml` | Declares the `raw` sources — TTG and Meridian. The whitelabel brand schemas are not in here. |
+| `dbt/models/staging/` | TTG staging models are already built. Anything else you stage goes here. |
+| `dbt/models/intermediate/` | Empty. |
+| `dbt/models/mart/` | Empty. |
 | `dbt/seeds/` | `event_type_mapping.csv` (existing) and `fx_rates.csv` (new — currency → USD rate, for candidates to reference rather than hardcode). |
 | `data/initial/` | CSVs loaded into `raw` at init, both TTG and Meridian. |
 | `data/whitelabel/` | CSVs loaded into the per-brand schemas at init. `<schema>__<table>.csv` names the relation it becomes. |
