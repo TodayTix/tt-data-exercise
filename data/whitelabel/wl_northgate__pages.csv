@@ -1,0 +1,10 @@
+page_id,visitor_id,account_id,page_type,occurred_at,event_id,brand_code
+ngt_p_1,vis_ngt_a1,acc_2,viewed_product_page,2025-01-08T16:20:44,evt_lion_king,NGT
+ngt_p_2,vis_ngt_a1,acc_2,VIEWED SHOWTIME,2025-01-08T16:24:10,evt_lion_king,NGT
+ngt_p_3,vis_ngt_b2,,home,2025-01-21T10:05:31,,NGT
+ngt_p_4,vis_ngt_b2,N/A,viewed_product_page,2025-01-21T10:09:57,evt_six,NGT
+ngt_p_5,vis_ngt_c3,acc_9,checkout_start ,2025-02-06T19:41:02,evt_six,NGT
+ngt_p_6,vis_ngt_c3,acc_9,checkout_complete,2025-02-06T19:47:38,evt_six,NGT
+ngt_p_7,vis_ngt_d4,NULL,VIEWED_PRODUCT_PAGE,2025-02-19T08:33:15,evt_deathly_hallows,NGT
+ngt_p_8,vis_ngt_e5,acc_5,viewed_showtime,2025-03-01T21:12:49,evt_hamilton,NGT
+ngt_p_9,vis_ngt_e5,acc_5,home,2025-03-01T21:15:03,,NGT

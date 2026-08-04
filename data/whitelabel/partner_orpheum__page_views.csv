@@ -1,0 +1,9 @@
+view_id,cookie,member_ref,path,viewed_at,production_ref
+orp_v_1,ck_orp_a1,acc_6,/,2025-01-16T09:11:40,
+orp_v_2,ck_orp_a1,acc_6,/show/wicked,2025-01-16T09:14:02,evt_wicked
+orp_v_3,ck_orp_b2,,/show/hamilton,2025-01-30T13:26:18,evt_hamilton
+orp_v_4,ck_orp_b2,,/show/hamilton/performances,2025-01-30T13:29:44,evt_hamilton
+orp_v_5,ck_orp_c3,acc_12,/checkout,2025-02-12T18:02:57,evt_six
+orp_v_6,ck_orp_c3,acc_12,/checkout/confirmation,2025-02-12T18:09:31,evt_six
+orp_v_7,ck_orp_d4,,/,2025-02-25T07:44:12,
+orp_v_8,ck_orp_e5,acc_20,/show/aladdin,2025-03-07T16:38:25,evt_aladdin

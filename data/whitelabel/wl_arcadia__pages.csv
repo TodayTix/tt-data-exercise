@@ -1,0 +1,13 @@
+page_id,visitor_id,account_id,page_type,occurred_at,event_id,showtime_id,utm_source,utm_medium,brand_code
+arc_p_1,vis_arc_a1,acc_3,viewed_product_page,2025-01-14T11:02:11,evt_wicked,,google,cpc,ARC
+arc_p_2,vis_arc_a1,acc_3,VIEWED_SHOWTIME,2025-01-14T11:04:52,evt_wicked,st_evt_wicked_1,google,cpc,ARC
+arc_p_3,vis_arc_b2,,viewed product page,2025-01-19T18:44:03,evt_six,,,,ARC
+arc_p_4,vis_arc_b2,N/A,checkout_start,2025-01-19T18:51:20,evt_six,,newsletter,email,ARC
+arc_p_5,vis_arc_c3,acc_11,viewed_showtime ,2025-02-02T09:12:44,evt_hamilton,st_evt_hamilton_19,,,ARC
+arc_p_6,vis_arc_c3,acc_11,checkout_complete,2025-02-02T09:20:05,evt_hamilton,st_evt_hamilton_19,,,ARC
+arc_p_7,vis_arc_d4,NULL,home,2025-02-11T20:01:37,,,facebook,paid_social,ARC
+arc_p_8,vis_arc_d4,,VIEWED_PRODUCT_PAGE,2025-02-11T20:03:59,evt_lion_king,,facebook,paid_social,ARC
+arc_p_9,vis_arc_e5,acc_7,viewed_product_page,2025-02-24T13:30:12,evt_aladdin,,,,ARC
+arc_p_10,vis_arc_e5,acc_7,viewed_showtime,2025-02-24T13:33:48,evt_lion_king,st_evt_lion_king_37,,,ARC
+arc_p_11,vis_arc_f6,,  home  ,2025-03-05T07:55:02,,,google,organic,ARC
+arc_p_12,vis_arc_f6,acc_15,checkout_start,2025-03-05T08:10:19,evt_book_of_mormon,,google,organic,ARC

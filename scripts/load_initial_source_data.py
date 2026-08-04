@@ -1,5 +1,6 @@
 """
 Create raw schema and source tables, then load CSVs from data/initial/.
+Also loads the per-brand whitelabel schemas from data/whitelabel/.
 Run from repo root: docker compose run --rm loader python scripts/load_initial_source_data.py
 """
 import csv
@@ -8,6 +9,8 @@ import sys
 
 import psycopg2
 from psycopg2.extras import execute_values
+
+import whitelabel_sources
 
 # Defaults match docker/dbt/profiles.yml and warehouse service
 PGHOST = os.environ.get("PGHOST", "warehouse")
@@ -18,6 +21,7 @@ PGDATABASE = os.environ.get("PGDATABASE", "warehouse")
 
 REPO_ROOT = os.environ.get("REPO_ROOT", "/app")
 INIT_DIR = os.path.join(REPO_ROOT, "data", "initial")
+WHITELABEL_DIR = os.path.join(REPO_ROOT, "data", "whitelabel")
 
 
 def _null_if_empty(s):
@@ -434,6 +438,9 @@ def main():
                     rows,
                 )
                 print(f"Loaded {len(rows)} rows into raw.meridian_web_sessions")
+
+            # --- Whitelabel storefronts: one schema per brand, outside raw ---
+            whitelabel_sources.load_dir(cur, WHITELABEL_DIR)
 
         conn.commit()
     except Exception as e:

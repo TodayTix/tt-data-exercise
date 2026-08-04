@@ -1,5 +1,6 @@
 """
-Append CSV batches from data/incremental/ into source tables (raw schema).
+Append CSV batches from data/incremental/ into source tables (raw schema), and from
+data/incremental/whitelabel/<schema>__<table>/ into the whitelabel brand schemas.
 Run from repo root: docker compose run --rm loader python scripts/ingest.py [batch]
   batch: optional path or name (e.g. pages/batch_001 or meridian_orders/batch_001.csv)
          If omitted, processes all CSV files under data/incremental/.
@@ -10,6 +11,8 @@ import sys
 
 import psycopg2
 from psycopg2.extras import execute_values
+
+import whitelabel_sources
 
 PGHOST = os.environ.get("PGHOST", "warehouse")
 PGPORT = int(os.environ.get("PGPORT", "5432"))
@@ -226,6 +229,19 @@ def ingest_meridian_web_sessions(cur, path: str) -> int:
     return len(rows)
 
 
+def ingest_whitelabel(cur, path: str, relation: str) -> tuple[str, int]:
+    """Append a batch to a whitelabel brand relation named by its parent dir, <schema>__<table>."""
+    schema, _, table = relation.partition("__")
+    with open(path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        columns = list(reader.fieldnames or [])
+        rows = [
+            tuple(r[c] if r[c] and r[c].strip() else None for c in columns) for r in reader
+        ]
+    n = whitelabel_sources.insert_rows(cur, schema, table, columns, rows)
+    return f"{schema}.{table}", n
+
+
 # Map first path segment (entity dir name) to (table_name, ingest_fn)
 ENTITY_HANDLERS = {
     "accounts": ("raw.accounts", ingest_accounts),
@@ -281,6 +297,10 @@ def main():
                 rel = os.path.relpath(path, INCREMENTAL_DIR)
                 parts = rel.split(os.sep)
                 entity = parts[0] if parts else None
+                if entity == "whitelabel" and len(parts) > 2:
+                    relation, n = ingest_whitelabel(cur, path, parts[1])
+                    print(f"Appended {n} rows to {relation} from {rel}")
+                    continue
                 if entity not in ENTITY_HANDLERS:
                     print(f"Unknown entity dir: {entity}, skipping {rel}", file=sys.stderr)
                     continue
