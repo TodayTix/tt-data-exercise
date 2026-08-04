@@ -1,0 +1,25 @@
+order_item_id,order_id,seat_section,unit_price,quantity
+oi_1a,mo_1,Stalls,70.00,1
+oi_1b,mo_1,Circle,50.00,1
+oi_2,mo_2, Stalls ,47.50,2
+oi_3a,mo_3,Balcony,47.50,1
+oi_3b,mo_3,Stalls,47.50,1
+oi_4,mo_4,Stalls,70.00,2
+oi_5,mo_5,GA,55.00,2
+oi_6,mo_6,Stalls,65.00,2
+oi_7,mo_7,Balcony,52.50,2
+oi_8,mo_8,GA,49.50,2
+oi_9,mo_9,Stalls,75.00,2
+oi_10,mo_10,Stalls,56.00,2
+oi_11a,mo_11,Balcony,70.00,1
+oi_11b,mo_11,GA,50.00,1
+oi_12,mo_12,GA,52.50,2
+oi_13,mo_13,Stalls,59.00,2
+oi_14,mo_14,Balcony,61.00,2
+oi_15,mo_15,Stalls,67.50,2
+oi_16,mo_16,Stalls,64.00,2
+oi_17,mo_17,GA,49.50,2
+oi_18,mo_18,Stalls,525.00,2
+oi_19,mo_19,GA,50.00,2
+oi_20,mo_20,GA,50.00,1
+oi_21,mo_21,Merch,25.00,1

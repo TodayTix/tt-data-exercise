@@ -1,0 +1,3 @@
+order_id,customer_id,performance_id,currency,subtotal,fees,total,status,placed_at
+mo_22,MC-1007,mp_12,GBP,£140.00,£9.00,£149.00,paid,2025-02-10T10:00:00
+mo_23,MC-1010,mp_7,GBP,88.00,6.00,94.00,paid,2025-02-11T11:00:00

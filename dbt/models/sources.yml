@@ -1,12 +1,17 @@
-# Source tables (raw schema). Initial data loaded by scripts/load_initial_source_data.py;
-# incremental data appended by scripts/ingest.py. Candidates model from source('raw', '<table>').
-# Identity on pages: pages have both stable account_id and unstable customer_id; identity_merges applies to customer_id only.
+# Source tables (raw schema). TodayTix tables loaded/appended as in the original platform;
+# Meridian tables are the new MARI portfolio company being onboarded (loaded the same way).
+# Candidates model from source('raw', '<table>').
+# Identity on TTG pages: stable account_id + unstable customer_id; identity_merges resolves customer_id only.
+# Identity on Meridian: NO merge log is provided. cookie_id is unstable and pre-login; customer_id is only
+# populated once a session is tied to an account (e.g. at checkout). There is no table that maps cookie_id
+# history the way identity_merges does for TTG — that gap is intentional, see README.
 version: 2
 sources:
   - name: raw
     schema: raw
     description: Source tables loaded from data/initial/ and appended from data/incremental/
     tables:
+      # ---- Existing TodayTix (TTG) platform — already modeled in staging/intermediate/mart ----
       - name: accounts
         description: Stable account entity (e.g. logged-in user).
         columns:
@@ -62,10 +67,96 @@ sources:
           - name: showtime_id
             description: Optional context (e.g. viewed showtime).
       - name: identity_merges
-        description: Merge log for customer_id (e.g. Segment Unify). from_customer_id was merged into to_customer_id at merged_at. Use to resolve pages.customer_id to canonical id when building marts.
+        description: Merge log for TTG customer_id (e.g. Segment Unify). from_customer_id was merged into to_customer_id at merged_at. Use to resolve pages.customer_id to canonical id when building marts.
         columns:
           - name: from_customer_id
             description: Id that was merged away (unstable/deprecated).
           - name: to_customer_id
             description: Canonical id that absorbed the merge.
           - name: merged_at
+
+      # ---- Meridian Live (new MARI portfolio company) — onboarding target for this exercise ----
+      - name: meridian_customers
+        description: Meridian's account entity. No relationship to TTG accounts is provided — a shared real-world person may exist in both systems with no shared key other than (unreliable) email.
+        columns:
+          - name: customer_id
+            description: Primary key, Meridian format (e.g. MC-1001).
+          - name: full_name
+            description: Free text; sometimes blank (guest checkout).
+          - name: email
+          - name: phone
+          - name: country
+          - name: created_at
+          - name: marketing_opt_in
+      - name: meridian_venues
+        description: Physical venues Meridian sells tickets for. TTG's model has no venue entity today.
+        columns:
+          - name: venue_id
+            description: Primary key.
+          - name: name
+          - name: city
+          - name: country
+      - name: meridian_events
+        description: Shows/productions on Meridian, each tied to one venue.
+        columns:
+          - name: event_id
+            description: Primary key, Meridian format (e.g. me_starlight). Not the same id space as raw.events.
+          - name: title
+          - name: venue_id
+            description: FK to meridian_venues.
+          - name: category
+            description: Free text genre (e.g. Theatre, Comedy, Opera); casing inconsistent.
+      - name: meridian_performances
+        description: A specific occurrence of a Meridian event. TTG's equivalent (showtimes) stores start_at already normalized to UTC; Meridian does not.
+        columns:
+          - name: performance_id
+            description: Primary key.
+          - name: event_id
+            description: FK to meridian_events.
+          - name: starts_at_local
+            description: Naive local timestamp, no timezone. Must be combined with utc_offset_minutes to get a true instant.
+          - name: utc_offset_minutes
+            description: Offset from UTC in minutes for this performance's local time (varies by venue and DST).
+          - name: doors_at_local
+      - name: meridian_orders
+        description: Order header. Grain is one row per checkout, not per payment — there is no separate transactions table. Multi-currency; amounts are formatted inconsistently (symbols, thousands/decimal separators).
+        columns:
+          - name: order_id
+            description: Primary key.
+          - name: customer_id
+            description: Optional FK to meridian_customers; blank for anonymous/gift purchases.
+          - name: performance_id
+            description: Optional FK to meridian_performances; blank for non-ticket orders (e.g. merchandise).
+          - name: currency
+            description: ISO-ish currency code (GBP, EUR, SEK, USD).
+          - name: subtotal
+          - name: fees
+          - name: total
+            description: subtotal + fees, in the order's original currency, as formatted text.
+          - name: status
+            description: paid / refunded / partial_refund / cancelled. Casing and whitespace inconsistent.
+          - name: placed_at
+      - name: meridian_order_items
+        description: Ticket/merch line items within an order. An order may have multiple items at different price points — this is Meridian's natural grain, one level finer than meridian_orders.
+        columns:
+          - name: order_item_id
+            description: Primary key.
+          - name: order_id
+            description: FK to meridian_orders.
+          - name: seat_section
+          - name: unit_price
+          - name: quantity
+      - name: meridian_web_sessions
+        description: Browsing behavior on Meridian. cookie_id is the only pre-login identifier and is never resolved to a customer_id except when a session happens to convert — there is no merge/identity-resolution table like TTG's identity_merges for this source.
+        columns:
+          - name: session_id
+            description: Primary key.
+          - name: cookie_id
+            description: Unstable, anonymous browser identifier.
+          - name: customer_id
+            description: Populated only once known (e.g. checkout_start/checkout_complete); NULL/blank/N/A/NULL-string otherwise.
+          - name: event_id
+            description: Optional context; blank for account-level pages like checkout.
+          - name: page_type
+            description: Free text; casing and whitespace inconsistent.
+          - name: occurred_at

@@ -219,6 +219,222 @@ def main():
                 )
                 print(f"Loaded {len(rows)} rows into raw.identity_merges")
 
+            # --- Meridian Live (new MARI portfolio company being onboarded) ---
+
+            # meridian_customers: customer_id, full_name, email, phone, country, created_at, marketing_opt_in
+            meridian_customers_csv = os.path.join(INIT_DIR, "meridian_customers.csv")
+            if os.path.isfile(meridian_customers_csv):
+                cur.execute("""
+                    CREATE TABLE raw.meridian_customers (
+                        customer_id TEXT PRIMARY KEY,
+                        full_name TEXT,
+                        email TEXT,
+                        phone TEXT,
+                        country TEXT,
+                        created_at TIMESTAMPTZ,
+                        marketing_opt_in TEXT
+                    );
+                """)
+                with open(meridian_customers_csv, newline="", encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    rows = [
+                        (
+                            r["customer_id"],
+                            _null_if_empty(r.get("full_name")),
+                            r["email"],
+                            _null_if_empty(r.get("phone")),
+                            r["country"],
+                            r["created_at"],
+                            _null_if_empty(r.get("marketing_opt_in")),
+                        )
+                        for r in reader
+                    ]
+                execute_values(
+                    cur,
+                    "INSERT INTO raw.meridian_customers (customer_id, full_name, email, phone, country, created_at, marketing_opt_in) VALUES %s",
+                    rows,
+                )
+                print(f"Loaded {len(rows)} rows into raw.meridian_customers")
+
+            # meridian_venues: venue_id, name, city, country
+            meridian_venues_csv = os.path.join(INIT_DIR, "meridian_venues.csv")
+            if os.path.isfile(meridian_venues_csv):
+                cur.execute("""
+                    CREATE TABLE raw.meridian_venues (
+                        venue_id TEXT PRIMARY KEY,
+                        name TEXT,
+                        city TEXT,
+                        country TEXT
+                    );
+                """)
+                with open(meridian_venues_csv, newline="", encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    rows = [(r["venue_id"], r["name"], r["city"], r["country"]) for r in reader]
+                execute_values(
+                    cur,
+                    "INSERT INTO raw.meridian_venues (venue_id, name, city, country) VALUES %s",
+                    rows,
+                )
+                print(f"Loaded {len(rows)} rows into raw.meridian_venues")
+
+            # meridian_events: event_id, title, venue_id, category
+            meridian_events_csv = os.path.join(INIT_DIR, "meridian_events.csv")
+            if os.path.isfile(meridian_events_csv):
+                cur.execute("""
+                    CREATE TABLE raw.meridian_events (
+                        event_id TEXT PRIMARY KEY,
+                        title TEXT,
+                        venue_id TEXT,
+                        category TEXT
+                    );
+                """)
+                with open(meridian_events_csv, newline="", encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    rows = [
+                        (r["event_id"], r["title"], r["venue_id"], r["category"])
+                        for r in reader
+                    ]
+                execute_values(
+                    cur,
+                    "INSERT INTO raw.meridian_events (event_id, title, venue_id, category) VALUES %s",
+                    rows,
+                )
+                print(f"Loaded {len(rows)} rows into raw.meridian_events")
+
+            # meridian_performances: performance_id, event_id, starts_at_local, utc_offset_minutes, doors_at_local
+            meridian_performances_csv = os.path.join(INIT_DIR, "meridian_performances.csv")
+            if os.path.isfile(meridian_performances_csv):
+                cur.execute("""
+                    CREATE TABLE raw.meridian_performances (
+                        performance_id TEXT PRIMARY KEY,
+                        event_id TEXT,
+                        starts_at_local TIMESTAMP,
+                        utc_offset_minutes INTEGER,
+                        doors_at_local TIMESTAMP
+                    );
+                """)
+                with open(meridian_performances_csv, newline="", encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    rows = [
+                        (
+                            r["performance_id"],
+                            r["event_id"],
+                            r["starts_at_local"],
+                            r["utc_offset_minutes"],
+                            r["doors_at_local"],
+                        )
+                        for r in reader
+                    ]
+                execute_values(
+                    cur,
+                    "INSERT INTO raw.meridian_performances (performance_id, event_id, starts_at_local, utc_offset_minutes, doors_at_local) VALUES %s",
+                    rows,
+                )
+                print(f"Loaded {len(rows)} rows into raw.meridian_performances")
+
+            # meridian_orders: order_id, customer_id, performance_id, currency, subtotal, fees, total, status, placed_at
+            meridian_orders_csv = os.path.join(INIT_DIR, "meridian_orders.csv")
+            if os.path.isfile(meridian_orders_csv):
+                cur.execute("""
+                    CREATE TABLE raw.meridian_orders (
+                        order_id TEXT PRIMARY KEY,
+                        customer_id TEXT,
+                        performance_id TEXT,
+                        currency TEXT,
+                        subtotal TEXT,
+                        fees TEXT,
+                        total TEXT,
+                        status TEXT,
+                        placed_at TIMESTAMPTZ
+                    );
+                """)
+                with open(meridian_orders_csv, newline="", encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    rows = [
+                        (
+                            r["order_id"],
+                            _null_if_empty(r.get("customer_id")),
+                            _null_if_empty(r.get("performance_id")),
+                            r["currency"],
+                            r["subtotal"],
+                            r["fees"],
+                            r["total"],
+                            r["status"],
+                            r["placed_at"],
+                        )
+                        for r in reader
+                    ]
+                execute_values(
+                    cur,
+                    "INSERT INTO raw.meridian_orders (order_id, customer_id, performance_id, currency, subtotal, fees, total, status, placed_at) VALUES %s",
+                    rows,
+                )
+                print(f"Loaded {len(rows)} rows into raw.meridian_orders")
+
+            # meridian_order_items: order_item_id, order_id, seat_section, unit_price, quantity
+            meridian_order_items_csv = os.path.join(INIT_DIR, "meridian_order_items.csv")
+            if os.path.isfile(meridian_order_items_csv):
+                cur.execute("""
+                    CREATE TABLE raw.meridian_order_items (
+                        order_item_id TEXT PRIMARY KEY,
+                        order_id TEXT,
+                        seat_section TEXT,
+                        unit_price TEXT,
+                        quantity INTEGER
+                    );
+                """)
+                with open(meridian_order_items_csv, newline="", encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    rows = [
+                        (
+                            r["order_item_id"],
+                            r["order_id"],
+                            r["seat_section"],
+                            r["unit_price"],
+                            r["quantity"],
+                        )
+                        for r in reader
+                    ]
+                execute_values(
+                    cur,
+                    "INSERT INTO raw.meridian_order_items (order_item_id, order_id, seat_section, unit_price, quantity) VALUES %s",
+                    rows,
+                )
+                print(f"Loaded {len(rows)} rows into raw.meridian_order_items")
+
+            # meridian_web_sessions: session_id, cookie_id, customer_id, event_id, page_type, occurred_at
+            meridian_web_sessions_csv = os.path.join(INIT_DIR, "meridian_web_sessions.csv")
+            if os.path.isfile(meridian_web_sessions_csv):
+                cur.execute("""
+                    CREATE TABLE raw.meridian_web_sessions (
+                        session_id TEXT PRIMARY KEY,
+                        cookie_id TEXT,
+                        customer_id TEXT,
+                        event_id TEXT,
+                        page_type TEXT,
+                        occurred_at TIMESTAMPTZ
+                    );
+                """)
+                with open(meridian_web_sessions_csv, newline="", encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    rows = [
+                        (
+                            r["session_id"],
+                            r["cookie_id"],
+                            _null_if_empty(r.get("customer_id")),
+                            _null_if_empty(r.get("event_id")),
+                            r["page_type"],
+                            r["occurred_at"],
+                        )
+                        for r in reader
+                    ]
+                execute_values(
+                    cur,
+                    "INSERT INTO raw.meridian_web_sessions (session_id, cookie_id, customer_id, event_id, page_type, occurred_at) VALUES %s",
+                    rows,
+                )
+                print(f"Loaded {len(rows)} rows into raw.meridian_web_sessions")
+
         conn.commit()
     except Exception as e:
         conn.rollback()
