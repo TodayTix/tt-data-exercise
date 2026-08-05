@@ -28,9 +28,16 @@ def _null_if_blank(value):
 
 
 def create_relation(cur, schema: str, table: str, columns: list[str]) -> None:
-    """(Re)create schema.table with one column per name, typed by column_type."""
-    cur.execute(sql.SQL("DROP SCHEMA IF EXISTS {} CASCADE").format(sql.Identifier(schema)))
-    cur.execute(sql.SQL("CREATE SCHEMA {}").format(sql.Identifier(schema)))
+    """(Re)create schema.table with one column per name, typed by column_type.
+
+    Only the named relation is replaced; a brand's other relations survive.
+    """
+    cur.execute(sql.SQL("CREATE SCHEMA IF NOT EXISTS {}").format(sql.Identifier(schema)))
+    cur.execute(
+        sql.SQL("DROP TABLE IF EXISTS {}.{} CASCADE").format(
+            sql.Identifier(schema), sql.Identifier(table)
+        )
+    )
     cur.execute(
         sql.SQL("CREATE TABLE {}.{} ({})").format(
             sql.Identifier(schema),

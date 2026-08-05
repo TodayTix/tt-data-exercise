@@ -11,7 +11,7 @@ sources:
     schema: raw
     description: Source tables loaded from data/initial/ and appended from data/incremental/
     tables:
-      # ---- Existing TodayTix (TTG) platform — already modeled in staging/intermediate/mart ----
+      # ---- Existing TodayTix (TTG) platform — already staged; nothing above staging ----
       - name: accounts
         description: Stable account entity (e.g. logged-in user).
         columns:
