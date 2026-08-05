@@ -59,7 +59,7 @@ sources:
           - name: account_id
             description: Stable; correlates to accounts.
           - name: customer_id
-            description: Unstable; may be merged at any time (e.g. Segment Unify). Resolve via identity_merges when building marts.
+            description: Unstable behavioural id, emitted by the tracker and merged at any time. Only pages carries it — orders and transactions key on account_id. Resolve via identity_merges when building marts.
           - name: page_type
           - name: occurred_at
           - name: event_id
@@ -67,7 +67,7 @@ sources:
           - name: showtime_id
             description: Optional context (e.g. viewed showtime).
       - name: identity_merges
-        description: Merge log for TTG customer_id (e.g. Segment Unify). from_customer_id was merged into to_customer_id at merged_at. Use to resolve pages.customer_id to canonical id when building marts.
+        description: Merge log for TTG customer_id. from_customer_id was merged into to_customer_id at merged_at. Appended to over time, like any other source. Use to resolve pages.customer_id to canonical id when building marts.
         columns:
           - name: from_customer_id
             description: Id that was merged away (unstable/deprecated).
@@ -77,7 +77,7 @@ sources:
 
       # ---- Meridian Live (new MARI portfolio company) — onboarding target for this exercise ----
       - name: meridian_customers
-        description: Meridian's account entity. No relationship to TTG accounts is provided — a shared real-world person may exist in both systems with no shared key other than (unreliable) email.
+        description: Meridian's account entity. No relationship to TTG accounts is provided, and email is the only field the two systems have in common — an address that appears in both is a hint, not a key.
         columns:
           - name: customer_id
             description: Primary key, Meridian format (e.g. MC-1001).
@@ -128,7 +128,7 @@ sources:
           - name: performance_id
             description: Optional FK to meridian_performances; blank for non-ticket orders (e.g. merchandise).
           - name: currency
-            description: ISO-ish currency code (GBP, EUR, SEK, USD).
+            description: ISO-ish currency code (GBP, EUR, SEK). None of Meridian's trade is in USD.
           - name: subtotal
           - name: fees
           - name: total
