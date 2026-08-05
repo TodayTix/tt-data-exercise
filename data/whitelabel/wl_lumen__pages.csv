@@ -1,0 +1,11 @@
+page_id,visitor_id,account_id,page_type,occurred_at,event_id,showtime_id,utm_source,utm_medium,brand_code,consent_state,device_type
+lum_p_1,vis_lum_a1,acc_1,home,2025-01-11T12:00:04,,,direct,none,LUM,granted,mobile
+lum_p_2,vis_lum_a1,acc_1,viewed_product_page,2025-01-11T12:02:47,evt_wicked,,direct,none,LUM,granted,mobile
+lum_p_3,vis_lum_b2,,VIEWED_PRODUCT_PAGE,2025-01-27T15:31:22,evt_aladdin,,tiktok,paid_social,LUM,denied,mobile
+lum_p_4,vis_lum_b2,N/A,viewed_showtime,2025-01-27T15:36:55,evt_wicked,st_evt_wicked_4,tiktok,paid_social,LUM,denied,mobile
+lum_p_5,vis_lum_c3,acc_13,checkout_start,2025-02-14T17:48:30,evt_six,,,,LUM,granted,desktop
+lum_p_6,vis_lum_c3,acc_13,checkout_complete,2025-02-14T17:55:11,evt_six,,,,LUM,granted,desktop
+lum_p_7,vis_lum_d4,NULL,viewed showtime,2025-02-28T09:07:19,evt_hamilton,st_evt_hamilton_20,google,cpc,LUM,unknown,tablet
+lum_p_8,vis_lum_e5,acc_18,  home ,2025-03-09T22:14:06,,,,,LUM,granted,desktop
+lum_p_9,vis_lum_e5,acc_18,viewed_product_page,2025-03-09T22:18:41,evt_deathly_hallows,,,,LUM,granted,desktop
+lum_p_10,vis_lum_f6,,viewed_product_page,2025-03-15T11:29:53,evt_lion_king,,newsletter,email,LUM,granted,mobile

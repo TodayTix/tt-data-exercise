@@ -1,7 +1,8 @@
 """
-Append CSV batches from data/incremental/ into source tables (raw schema).
+Append CSV batches from data/incremental/ into source tables (raw schema), and from
+data/incremental/whitelabel/<schema>__<table>/ into the whitelabel brand schemas.
 Run from repo root: docker compose run --rm loader python scripts/ingest.py [batch]
-  batch: optional path or name (e.g. pages/batch_001 or pages/batch_001.csv)
+  batch: optional path or name (e.g. pages/batch_001 or meridian_orders/batch_001.csv)
          If omitted, processes all CSV files under data/incremental/.
 """
 import csv
@@ -10,6 +11,8 @@ import sys
 
 import psycopg2
 from psycopg2.extras import execute_values
+
+import whitelabel_sources
 
 PGHOST = os.environ.get("PGHOST", "warehouse")
 PGPORT = int(os.environ.get("PGPORT", "5432"))
@@ -152,6 +155,93 @@ def ingest_identity_merges(cur, path: str) -> int:
     return len(rows)
 
 
+def ingest_meridian_orders(cur, path: str) -> int:
+    with open(path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        rows = [
+            (
+                r["order_id"],
+                _null_if_empty(r.get("customer_id")),
+                _null_if_empty(r.get("performance_id")),
+                r["currency"],
+                r["subtotal"],
+                r["fees"],
+                r["total"],
+                r["status"],
+                r["placed_at"],
+            )
+            for r in reader
+        ]
+    if not rows:
+        return 0
+    execute_values(
+        cur,
+        "INSERT INTO raw.meridian_orders (order_id, customer_id, performance_id, currency, subtotal, fees, total, status, placed_at) VALUES %s",
+        rows,
+    )
+    return len(rows)
+
+
+def ingest_meridian_order_items(cur, path: str) -> int:
+    with open(path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        rows = [
+            (
+                r["order_item_id"],
+                r["order_id"],
+                r["seat_section"],
+                r["unit_price"],
+                r["quantity"],
+            )
+            for r in reader
+        ]
+    if not rows:
+        return 0
+    execute_values(
+        cur,
+        "INSERT INTO raw.meridian_order_items (order_item_id, order_id, seat_section, unit_price, quantity) VALUES %s",
+        rows,
+    )
+    return len(rows)
+
+
+def ingest_meridian_web_sessions(cur, path: str) -> int:
+    with open(path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        rows = [
+            (
+                r["session_id"],
+                r["cookie_id"],
+                _null_if_empty(r.get("customer_id")),
+                _null_if_empty(r.get("event_id")),
+                r["page_type"],
+                r["occurred_at"],
+            )
+            for r in reader
+        ]
+    if not rows:
+        return 0
+    execute_values(
+        cur,
+        "INSERT INTO raw.meridian_web_sessions (session_id, cookie_id, customer_id, event_id, page_type, occurred_at) VALUES %s",
+        rows,
+    )
+    return len(rows)
+
+
+def ingest_whitelabel(cur, path: str, relation: str) -> tuple[str, int]:
+    """Append a batch to a whitelabel brand relation named by its parent dir, <schema>__<table>."""
+    schema, _, table = relation.partition("__")
+    with open(path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        columns = list(reader.fieldnames or [])
+        rows = [
+            tuple(r[c] if r[c] and r[c].strip() else None for c in columns) for r in reader
+        ]
+    n = whitelabel_sources.insert_rows(cur, schema, table, columns, rows)
+    return f"{schema}.{table}", n
+
+
 # Map first path segment (entity dir name) to (table_name, ingest_fn)
 ENTITY_HANDLERS = {
     "accounts": ("raw.accounts", ingest_accounts),
@@ -161,6 +251,9 @@ ENTITY_HANDLERS = {
     "transactions": ("raw.transactions", ingest_transactions),
     "pages": ("raw.pages", ingest_pages),
     "identity_merges": ("raw.identity_merges", ingest_identity_merges),
+    "meridian_orders": ("raw.meridian_orders", ingest_meridian_orders),
+    "meridian_order_items": ("raw.meridian_order_items", ingest_meridian_order_items),
+    "meridian_web_sessions": ("raw.meridian_web_sessions", ingest_meridian_web_sessions),
 }
 
 
@@ -204,6 +297,10 @@ def main():
                 rel = os.path.relpath(path, INCREMENTAL_DIR)
                 parts = rel.split(os.sep)
                 entity = parts[0] if parts else None
+                if entity == "whitelabel" and len(parts) > 2:
+                    relation, n = ingest_whitelabel(cur, path, parts[1])
+                    print(f"Appended {n} rows to {relation} from {rel}")
+                    continue
                 if entity not in ENTITY_HANDLERS:
                     print(f"Unknown entity dir: {entity}, skipping {rel}", file=sys.stderr)
                     continue

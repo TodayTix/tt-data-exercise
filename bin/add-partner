@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Shim: create a new whitelabel brand's page-tracking schema in the warehouse.
+# Usage: bin/add-partner <brand> [--full] [--rows N] | bin/add-partner <brand> --drop
+set -euo pipefail
+cd "$(dirname "$0")/.."
+exec docker compose run --rm loader python scripts/add_partner.py "$@"

@@ -1,0 +1,26 @@
+session_id,cookie_id,customer_id,event_id,page_type,occurred_at
+ws_1,ck_9001,,me_starlight,event_view,2025-01-02T09:00:00
+ws_2,ck_9001,,me_starlight,performance_view,2025-01-02T09:05:00
+ws_3,ck_9001,MC-1001,,checkout_start,2025-01-02T09:12:00
+ws_4,ck_9002,,me_windrose,EVENT_VIEW,2025-01-03T11:00:00
+ws_5,ck_9002,,me_windrose,performance_view,2025-01-03T11:04:00
+ws_6,ck_9003,, me_comedy_night ,event_view,2025-01-05T13:00:00
+ws_7,ck_9004,MC-1004,,checkout_start,2025-01-04T08:50:00
+ws_8,ck_9004,MC-1004,,checkout_complete,2025-01-04T08:55:00
+ws_9,ck_9005,,me_midnight_opera,Event_View,2025-01-06T17:00:00
+ws_10,ck_9006,,me_starlight,event_view,2025-01-07T09:15:00
+ws_11,ck_9006,MC-1006,,checkout_start,2025-01-14T08:45:00
+ws_12,ck_9007,,me_folk_tales,event_view,2025-01-10T12:00:00
+ws_13,ck_9008,,me_windrose,performance_view,2025-01-11T14:30:00
+ws_14,ck_9009,,me_comedy_night,event_view,2025-01-15T09:00:00
+ws_15,ck_9010,N/A,me_midnight_opera,event_view,2025-01-18T10:00:00
+ws_16,ck_9011,,me_starlight,EVENT_VIEW,2025-01-20T11:00:00
+ws_17,ck_9011,MC-1001,,checkout_start,2025-01-22T09:50:00
+ws_18,ck_9012,,me_folk_tales,performance_view,2025-01-21T15:00:00
+ws_19,ck_9013,,,event_view,2025-01-23T09:00:00
+ws_20,ck_9014,MC-1016,,checkout_start,2025-01-15T09:00:00
+ws_21,ck_9014,MC-1016,,checkout_complete,2025-01-15T09:05:00
+ws_22,ck_9015,,me_windrose,event_view,2025-01-25T10:00:00
+ws_23,ck_9016,,me_comedy_night,performance_view,2025-02-01T19:00:00
+ws_24,ck_9017,NULL,me_midnight_opera,event_view,2025-02-03T14:00:00
+ws_25,ck_9018,,me_folk_tales,event_view,2025-01-14T09:00:00

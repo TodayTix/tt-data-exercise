@@ -1,0 +1,4 @@
+page_id,visitor_id,account_id,page_type,occurred_at,event_id,showtime_id,utm_source,utm_medium,brand_code
+arc_p_13,vis_arc_g7,acc_4,home,2025-03-18T08:22:10,,,google,cpc,ARC
+arc_p_14,vis_arc_g7,acc_4,VIEWED_PRODUCT_PAGE,2025-03-18T08:25:44,evt_hamilton,,google,cpc,ARC
+arc_p_15,vis_arc_g7,acc_4,viewed_showtime,2025-03-18T08:31:02,evt_hamilton,st_evt_hamilton_22,google,cpc,ARC

@@ -18,6 +18,18 @@ docker compose exec -T warehouse psql -U postgres -d warehouse -v ON_ERROR_STOP=
 DROP SCHEMA IF EXISTS raw CASCADE;
 DROP SCHEMA IF EXISTS public CASCADE;
 CREATE SCHEMA public;
+
+-- Whitelabel brand schemas, including any added mid-session with bin/add-partner.
+DO $$
+DECLARE brand_schema text;
+BEGIN
+  FOR brand_schema IN
+    SELECT nspname FROM pg_namespace
+    WHERE nspname LIKE 'wl\_%' OR nspname LIKE 'partner\_%'
+  LOOP
+    EXECUTE format('DROP SCHEMA IF EXISTS %I CASCADE', brand_schema);
+  END LOOP;
+END $$;
 SQL
 
 echo "Loading initial source data into raw..."
