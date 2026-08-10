@@ -10,9 +10,9 @@ For this round, you'll take on **Meridian Live**, a fictional (but realistic) MA
 
 There are two challenges in this repo. **Challenge 1** is onboarding Meridian — modeling judgment against messy source data. **Challenge 2** is the whitelabel page-tracking sources — a pipeline-design problem. Both hand you a project rather than a task: what the platform should grow on top of what's here is the thing you're working out, including which of the two is worth your time and how far to take it.
 
-The exercise will be completed **live with the interviewer(s)**. You'll work locally using this repo. You may use your normal tools, including AI assistants.
+The exercise will be completed **live with the interviewer(s)**, in **60 minutes**. You'll work locally using this repo. You may use your normal tools, including AI assistants.
 
-**This exercise is about architecture and judgment, not finishing everything.** You are not expected to model every Meridian table or handle every edge case in the time provided. We care more about how you reason through the tradeoffs, what you flag as a risk or open question, and how you'd sequence the work than about raw completion. Talk through your thinking as you go — this is as much a design conversation as a coding one.
+**This exercise is about architecture and judgment, not finishing everything.** Sixty minutes is not enough to model every Meridian table or handle every edge case, and it isn't meant to be. We care more about how you reason through the tradeoffs, what you flag as a risk or open question, and how you'd sequence the work than about raw completion. Talk through your thinking as you go — this is as much a design conversation as a coding one.
 
 ## What's already built vs. what you'll build
 
@@ -37,14 +37,14 @@ docker compose up -d
 ./scripts/init.sh
 ```
 
-Verify dbt works and the existing platform builds cleanly:
+`init.sh` finishes by running the existing models. Confirm dbt works from the shim too, and that a second run is still clean:
 
 ```bash
 bin/dbt --version
 bin/dbt run
 ```
 
-If these commands complete successfully, you're ready for the interview.
+If these commands complete successfully, you're ready for the interview. On Apple Silicon the dbt image runs emulated, so make sure Rosetta is enabled in Docker Desktop (Settings → General) before you get here — it's the one thing that fails on the day rather than now.
 
 To reset the warehouse to its initial state at any time:
 
@@ -56,13 +56,15 @@ To reset the warehouse to its initial state at any time:
 
 Meridian's raw data lands in the same `raw` schema as TTG's (see `dbt/models/sources.yml`), but it isn't a clean drop-in — that's the point. A few problems you'll likely need to reckon with, in no particular order:
 
-- **Identity across systems.** TTG's unstable `customer_id` is resolvable through the `identity_merges` log. Meridian has no such log, and there's no shared key between TTG and Meridian besides a loosely-formatted email. Some real people plausibly exist in both systems. How would you approach unifying (or deliberately not unifying) identity here, and what are the failure modes of your approach?
+- **Identity across systems.** TTG has two ids for a person: a stable `account_id` that the money keys on, and an unstable `customer_id` that only `pages` carries and only the `identity_merges` log can resolve. Meridian has no such log, and the two systems share no key at all besides a loosely-formatted email. Some addresses appear on both sides. How would you approach unifying (or deliberately not unifying) identity here, and what are the failure modes of your approach?
 - **Currency.** Meridian orders are priced in GBP, EUR, and SEK, formatted inconsistently (symbols, thousands/decimal separators). TTG's amounts are USD. How do you normalize without hardcoding rates in SQL?
 - **Grain.** TTG keeps the checkout and the money in separate tables: `orders` is one row per checkout, `transactions` is one row per payment taken against it, and payment is the grain TTG's facts sit at. Meridian has no payments table. The money lives on the order row itself — currency, subtotal, fees, total, status — and `meridian_order_items` splits that same money into line items with their own price and quantity. A Meridian order is therefore not a TTG transaction and not a TTG order either: it's payment detail recorded at checkout grain, with a finer grain underneath it. Read `stg_orders` and `stg_transactions` next to `meridian_orders` and `meridian_order_items` before you commit to anything. Sooner or later someone sums an amount across both sources, and what they get back depends on the grain you chose.
 - **Time.** Meridian stores performance start times as naive local timestamps plus a UTC offset in minutes; TTG's `showtimes.start_at` is already a normalized instant. Reconcile these consistently.
 - **Order status and cancellations.** Meridian orders can be `paid`, `refunded`, `partial_refund`, or `cancelled` (casing/whitespace inconsistent). What should "revenue" mean once these exist, and does that change what belongs in the fact you expose versus what a stakeholder should query separately?
 
 You don't need to resolve every one of these perfectly. Pick a defensible position on each, implement what you can in the time available, and be ready to explain what you didn't get to and why.
+
+Mid-session your interviewer will run `bin/ingest`, which appends a new batch to the source tables the way the real pipeline receives one, and ask you to rebuild. Nothing you've built has to be finished by then — but what is built should still be right afterwards, and you should be able to say how you'd know if it weren't.
 
 ## Challenge 2: whitelabel storefronts that onboard themselves
 
@@ -122,7 +124,7 @@ TTG (existing, already handled in staging — for reference):
 - Sentinel nulls (`N/A`, `NULL` string, empty string) on optional FKs in `pages`.
 
 Meridian (new, unhandled):
-- **Currency formatting** – `£120.00`, `"95,00 €"` (European decimal comma + symbol), `"1050,00 kr"`, or plain `100.00`, all within the same column.
+- **Currency formatting** – `£120.00`, `"95,00 €"` (European decimal comma + symbol), `"1.050,00 kr"` (grouping and decimal separators both inverted), or plain `100.00`, all within the same column.
 - **Casing/whitespace** – event categories, order statuses, and page types all vary in casing and padding.
 - **Sentinel-ish nulls** – blank, `N/A`, `NULL` string on optional identity/FK fields, same pattern as TTG's `pages` but on different tables.
 - **Duplicate identity within Meridian itself** – at least one real person has two `customer_id`s in `meridian_customers` with matching email but slightly different name formatting.
